@@ -1,0 +1,326 @@
+Quiero construir una webapp 3D llamada INSTINCT(), un videojuego educativo para aprender Python desde cero mediante una historia narrativa de una serpiente.
+
+Objetivo general:
+Crear un prototipo funcional en web donde el jugador controla/programa una serpiente 3D usando código estilo Python. El juego debe integrar un roadmap educativo de Python desde nivel cero hasta conceptos avanzados, dentro de una historia de vida completa: la serpiente nace de un huevo, aprende a moverse, cazar, sobrevivir, mudar su piel, proteger crías, enseñar comportamiento heredado y finalmente muere de vejez.
+
+Stack recomendado:
+- React
+- Vite
+- TypeScript
+- React Three Fiber
+- Three.js
+- TailwindCSS
+- Zustand para estado global
+- Monaco Editor para el editor de código
+- Pyodide o un intérprete simulado inicial para ejecutar comandos tipo Python
+
+Requisitos principales:
+1. Crear una webapp 3D con layout dividido:
+   - Mundo 3D principal a la izquierda.
+   - Panel derecho con:
+     - título del nivel,
+     - objetivo,
+     - explicación breve del concepto de Python,
+     - editor de código,
+     - botón Run,
+     - consola de salida,
+     - progreso del roadmap.
+
+2. Crear un mundo 3D inicial:
+   - Campo natural con pasto, piedras, árboles bajos, niebla ligera.
+   - Serpiente animada de forma sencilla.
+   - Huevo inicial.
+   - Depredadores/cazadores básicos.
+   - Cámara isométrica o tercera persona.
+
+3. Implementar la lógica base del juego:
+   - Entidad Snake con posición, vida, energía, veneno, edad, estado y etapa de vida.
+   - Entidades Predator/Hunter con posición, rango de detección y comportamiento simple.
+   - Sistema de niveles.
+   - Sistema de ejecución de código.
+   - Validación de objetivos por nivel.
+   - Consola de feedback.
+
+4. El primer nivel debe iniciar en oscuridad o con el huevo en escena.
+   El jugador debe escribir:
+
+   print("Hello World")
+
+   Cuando se ejecuta correctamente, el huevo se rompe y nace la serpiente.
+
+5. Implementar por lo menos 45 niveles estructurados en 5 actos:
+
+ACTO I — Nacimiento
+1. The Egg — print()
+2. First Breath — strings
+3. First Movement — comandos secuenciales
+4. Grass Instinct — variables
+5. Tiny Hunter — números
+6. Counting Steps — operaciones matemáticas
+7. The River — comparaciones
+8. Shadow Above — if/else
+9. Venom Reflex — acciones condicionales
+10. The Tall Grass — booleanos
+
+ACTO II — Supervivencia
+11. Endless Hunger — while
+12. Hunting Pattern — loops
+13. Repeated Escape — automatización
+14. The Burrow — funciones simples
+15. Strike — parámetros
+16. Venom Efficiency — return
+17. Predator Territory — nested if
+18. Cold Night — variables dinámicas
+19. Silent Movement — optimización
+20. Shed — refactorización / primera muda de piel
+
+ACTO III — Evolución
+21. Multiple Hunters — listas
+22. Scan Area — for
+23. Toxic Marsh — iteraciones complejas
+24. Memory Trails — arrays de posiciones
+25. Hunter Camps — diccionarios
+26. Storm — try/except
+27. The Owl — IA básica
+28. Heat Vision — lógica avanzada
+29. Territory Expansion — composición de funciones
+30. Alpha Snake — modularidad
+
+ACTO IV — Legacy
+31. Nest — clases
+32. Eggs — objetos/instancias
+33. Protect The Young — listas de objetos
+34. Teaching Instinct — herencia
+35. The Fire — eventos complejos
+36. Recursive Bloodline — recursividad
+37. Migration — algoritmos de movimiento
+38. Hunter Drones — pathfinding básico
+39. The Last Shed — optimización avanzada
+40. Aging — gestión de estado
+
+ACTO V — Death
+41. Slow Venom — envejecimiento
+42. Fading Vision — debugging
+43. Final Nest — comportamiento heredado
+44. The Last Hunt — reto final integrador
+45. Instinct() — muerte natural y legado
+
+6. Cada nivel debe tener esta estructura de datos:
+   - id
+   - title
+   - act
+   - narrative
+   - pythonConcept
+   - objective
+   - starterCode
+   - expectedPatterns
+   - successCondition
+   - unlockedCommands
+
+7. Crear comandos iniciales tipo Python:
+   - print()
+   - move_forward()
+   - turn_left()
+   - turn_right()
+   - hide()
+   - bite()
+   - hunt()
+   - rest()
+   - sense_predator()
+   - protect_child()
+   - shed_skin()
+
+8. Para el prototipo inicial, si Pyodide es complejo, crear un parser/interpreter simple que detecte patrones válidos del código escrito por el jugador. Diseñarlo de forma modular para reemplazarlo después por Pyodide.
+
+9. Estética:
+   - Visual serio, cinematográfico, no infantil.
+   - UI oscura, elegante, con acentos verde veneno.
+   - Panel de código tipo VSCode.
+   - Animaciones suaves.
+   - Tipografía moderna.
+   - Sensación de survival narrativo premium.
+
+10. Crear componentes limpios:
+   - App.tsx
+   - components/GameCanvas.tsx
+   - components/CodeEditor.tsx
+   - components/LevelPanel.tsx
+   - components/Console.tsx
+   - components/RoadmapProgress.tsx
+   - game/levels.ts
+   - game/entities.ts
+   - game/interpreter.ts
+   - store/gameStore.ts
+
+11. El prototipo debe permitir:
+   - cargar niveles,
+   - escribir código,
+   - ejecutar código,
+   - actualizar el mundo 3D,
+   - mostrar éxito/error,
+   - avanzar al siguiente nivel,
+   - ver progreso.
+
+12. Prioridad:
+   Primero crear un prototipo funcional y bien estructurado, no un juego completo.
+   Debe verse profesional desde el inicio, pero el código debe estar preparado para escalar.
+
+Entrega esperada:
+- Código completo del proyecto.
+- Estructura de carpetas clara.
+- Componentes funcionales.
+- Datos de los 45 niveles.
+- Primeros 5 niveles jugables de manera real.
+- Los niveles restantes definidos como roadmap desbloqueable.
+- Comentarios técnicos donde sea necesario.
+
+Mecánica de fallo, muerte y checkpoints:
+
+1. Si el jugador ejecuta código incorrecto:
+   - La serpiente debe morir o fallar narrativamente según el nivel.
+   - Mostrar una animación corta de muerte/fallo.
+   - Mostrar mensaje en consola explicando el error.
+   - Reiniciar el nivel desde el último checkpoint.
+
+2. Cada nivel debe tener:
+   - checkpointState
+   - attempts
+   - maxAttempts = 3
+   - failureNarrative
+   - hintLevel1
+   - hintLevel2
+   - hintLevel3
+
+3. Si el jugador falla 1 vez:
+   - Reiniciar el mismo nivel.
+   - Mostrar pista ligera.
+
+4. Si falla 2 veces:
+   - Reiniciar el mismo nivel.
+   - Mostrar pista más directa.
+
+5. Si falla 3 veces:
+   - Mostrar pista explícita.
+   - Reiniciar el mismo nivel por última vez.
+
+6. Si falla más de 3 veces:
+   - Regresar automáticamente al nivel anterior.
+   - Mostrar mensaje narrativo:
+     “El instinto aún no está listo. Regresa, aprende y vuelve más fuerte.”
+
+7. Si el jugador está en el nivel 1 y falla más de 3 veces:
+   - No puede regresar más.
+   - Se reinicia el nivel 1 con una guía más clara.
+
+8. El sistema debe guardar:
+   - nivel actual,
+   - intentos por nivel,
+   - checkpoints,
+   - progreso desbloqueado.
+
+9. Implementar funciones en el store:
+   - runCode()
+   - handleSuccess()
+   - handleFailure()
+   - resetToCheckpoint()
+   - goToPreviousLevel()
+   - incrementAttempts()
+
+10. La muerte no debe sentirse como castigo injusto.
+    Debe sentirse como parte del aprendizaje:
+    error → feedback → intento → mejora.
+
+Y en la estructura del nivel cambia esto:
+
+type Level = {
+  id: number;
+  title: string;
+  act: string;
+  narrative: string;
+  pythonConcept: string;
+  objective: string;
+  starterCode: string;
+  expectedPatterns: string[];
+  successCondition: string;
+  unlockedCommands: string[];
+
+  checkpointState: {
+    snakePosition: [number, number, number];
+    snakeHealth: number;
+    snakeEnergy: number;
+    snakeVenom: number;
+    predators: any[];
+    children?: any[];
+  };
+
+  maxAttempts: number;
+  failureNarrative: string;
+  hints: {
+    first: string;
+    second: string;
+    third: string;
+  };
+};
+
+Esto le mete tensión real al juego: programar bien = sobrevives, programar mal = mueres y aprendes.
+
+Stack completo recomendado para el proyecto INSTINCT():
+Core:
+- React
+- Vite
+- TypeScript
+
+3D:
+- Three.js
+- React Three Fiber
+- Drei
+- React Three Rapier
+
+Editor:
+- Monaco Editor
+
+Python:
+- Fase 1: intérprete simulado propio
+- Fase 2: Pyodide en Web Worker
+
+Estado:
+- Zustand
+
+UI:
+- TailwindCSS
+- Framer Motion
+- Lucide React
+
+Persistencia:
+- localStorage en prototipo
+- Firebase después
+
+Deploy:
+- Cloudflare Pages
+
+Stack tecnológico obligatorio:
+
+Usar:
+- React + Vite + TypeScript como base del proyecto.
+- React Three Fiber + Three.js para el mundo 3D.
+- @react-three/drei para helpers de cámara, luces, loaders y utilidades visuales.
+- @react-three/rapier para físicas, colisiones, triggers y detección de contacto.
+- TailwindCSS para la interfaz.
+- Zustand para el estado global del juego.
+- Monaco Editor para el editor de código estilo VS Code.
+- Framer Motion para animaciones de UI.
+- Lucide React para iconos.
+- localStorage para guardar progreso inicial.
+- Estructura preparada para Firebase en una fase futura.
+- Pyodide debe quedar planteado como fase 2. Para el prototipo inicial, implementar un intérprete simulado modular que valide patrones de Python y comandos permitidos.
+
+Arquitectura deseada:
+- El mundo 3D no debe estar acoplado directamente al editor.
+- El editor ejecuta código.
+- El intérprete convierte ese código en acciones del juego.
+- El store global actualiza el estado.
+- El mundo 3D reacciona visualmente a ese estado.
+
+Prioridad:
+Primero construir un prototipo profesional con los primeros 5 niveles jugables.
+Los 45 niveles deben existir como datos estructurados, pero no todos necesitan lógica completa desde el inicio.
