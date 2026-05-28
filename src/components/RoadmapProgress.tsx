@@ -13,7 +13,7 @@ export default function RoadmapProgress() {
 
   return (
     <section className="hud-panel-muted overflow-hidden rounded-lg">
-      <div className="flex items-center justify-between gap-3 border-b border-[#d8b574]/15 px-3 py-3">
+      <div className="flex items-center justify-between gap-3 border-b border-[#6e5630]/35 px-3 py-3">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#d8b574]/74">
             <Map className="h-4 w-4 text-venom" />
@@ -23,7 +23,7 @@ export default function RoadmapProgress() {
             Print, variables, constants, functions, loops, control flow, data and OOP.
           </p>
         </div>
-        <span className="rounded-md border border-venom/20 bg-venom/10 px-2.5 py-1 font-mono text-xs text-venom">
+        <span className="rounded-md border border-venom/[0.14] bg-venom/10 px-2.5 py-1 font-mono text-xs text-venom">
           {progress}%
         </span>
       </div>

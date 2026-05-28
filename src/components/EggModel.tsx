@@ -7,15 +7,30 @@ export default function EggModel({ egg }: { egg: EggState }) {
   const groupRef = useRef<Group>(null);
   const glowRef = useRef<Mesh>(null);
   const haloRef = useRef<Mesh>(null);
+  const crackStartRef = useRef<number | null>(null);
+  const leftShellRef = useRef<Group>(null);
+  const rightShellRef = useRef<Group>(null);
+  const crownShellRef = useRef<Group>(null);
+  const burstRef = useRef<Group>(null);
 
   useFrame(({ clock }) => {
     if (!groupRef.current) {
       return;
     }
 
+    if (!egg.cracked) {
+      crackStartRef.current = null;
+    }
+
+    if (egg.cracked && crackStartRef.current === null) {
+      crackStartRef.current = clock.elapsedTime;
+    }
+
+    const hatchElapsed = crackStartRef.current === null ? 0 : clock.elapsedTime - crackStartRef.current;
+    const hatchProgress = easeOut(Math.min(1, Math.max(0, hatchElapsed / 1.25)));
     const heartbeat = Math.sin(clock.elapsedTime * 3.2);
     const idle = Math.sin(clock.elapsedTime * 1.9) * 0.012;
-    const crackShake = egg.cracked ? Math.sin(clock.elapsedTime * 12) * 0.034 : 0;
+    const crackShake = egg.cracked && hatchProgress < 1 ? Math.sin(clock.elapsedTime * 18) * 0.052 : 0;
     const pulse = 1 + heartbeat * 0.09;
     groupRef.current.position.y = 0.44 + Math.sin(clock.elapsedTime * 2.2) * 0.018;
     groupRef.current.rotation.z = idle + crackShake;
@@ -26,6 +41,50 @@ export default function EggModel({ egg }: { egg: EggState }) {
 
     if (haloRef.current) {
       haloRef.current.scale.setScalar(egg.cracked ? 1.22 : 1 + heartbeat * 0.045);
+    }
+
+    if (leftShellRef.current) {
+      leftShellRef.current.position.set(
+        -0.18 - hatchProgress * 0.52,
+        -0.08 - hatchProgress * 0.16,
+        0.02 + hatchProgress * 0.1
+      );
+      leftShellRef.current.rotation.set(
+        0.1,
+        hatchProgress * -0.34,
+        0.46 + hatchProgress * 0.54
+      );
+    }
+
+    if (rightShellRef.current) {
+      rightShellRef.current.position.set(
+        0.18 + hatchProgress * 0.52,
+        -0.1 - hatchProgress * 0.16,
+        0.04 + hatchProgress * 0.16
+      );
+      rightShellRef.current.rotation.set(
+        -0.2,
+        0.2 + hatchProgress * 0.34,
+        -0.64 - hatchProgress * 0.5
+      );
+    }
+
+    if (crownShellRef.current) {
+      crownShellRef.current.position.set(
+        0.02 + hatchProgress * 0.08,
+        0.28 + hatchProgress * 0.34,
+        0.02 + hatchProgress * 0.2
+      );
+      crownShellRef.current.rotation.set(
+        hatchProgress * -0.92,
+        hatchProgress * 0.3,
+        hatchProgress * 0.7
+      );
+      crownShellRef.current.scale.setScalar(1 - hatchProgress * 0.18);
+    }
+
+    if (burstRef.current) {
+      burstRef.current.scale.setScalar(egg.cracked ? 1 + Math.sin(clock.elapsedTime * 8) * 0.08 : 0.001);
     }
   });
 
@@ -66,30 +125,34 @@ export default function EggModel({ egg }: { egg: EggState }) {
         </>
       ) : (
         <>
-          <mesh
-            castShadow
-            receiveShadow
-            position={[-0.28, -0.1, 0]}
-            rotation={[0.1, 0, 0.46]}
-            scale={[0.44, 0.58, 0.42]}
-          >
-            <sphereGeometry args={[0.72, 8, 6]} />
-            <meshStandardMaterial color="#d7d1b8" roughness={0.92} flatShading />
-          </mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            position={[0.28, -0.12, 0.06]}
-            rotation={[-0.2, 0.2, -0.64]}
-            scale={[0.4, 0.48, 0.38]}
-          >
-            <sphereGeometry args={[0.72, 8, 6]} />
-            <meshStandardMaterial color="#f1e9ca" roughness={0.92} flatShading />
-          </mesh>
-          <mesh position={[0, 0.12, 0]} scale={[0.23, 0.23, 0.23]}>
-            <dodecahedronGeometry args={[1, 0]} />
-            <meshStandardMaterial color="#8dff7a" emissive="#25561b" flatShading />
-          </mesh>
+          <group ref={leftShellRef}>
+            <mesh castShadow receiveShadow scale={[0.44, 0.58, 0.42]}>
+              <sphereGeometry args={[0.72, 8, 6]} />
+              <meshStandardMaterial color="#d7d1b8" roughness={0.92} flatShading />
+            </mesh>
+          </group>
+          <group ref={rightShellRef}>
+            <mesh castShadow receiveShadow scale={[0.4, 0.48, 0.38]}>
+              <sphereGeometry args={[0.72, 8, 6]} />
+              <meshStandardMaterial color="#f1e9ca" roughness={0.92} flatShading />
+            </mesh>
+          </group>
+          <group ref={crownShellRef}>
+            <mesh castShadow receiveShadow scale={[0.32, 0.25, 0.3]}>
+              <dodecahedronGeometry args={[1, 0]} />
+              <meshStandardMaterial color="#efe4c8" roughness={0.9} flatShading />
+            </mesh>
+          </group>
+          <group ref={burstRef} position={[0.04, 0.28, 0.08]}>
+            <mesh scale={[0.18, 0.64, 0.18]}>
+              <coneGeometry args={[1, 1, 7]} />
+              <meshBasicMaterial color="#8dff7a" transparent opacity={0.34} depthWrite={false} />
+            </mesh>
+            <mesh position={[0, 0.08, 0]} scale={[0.28, 0.28, 0.28]}>
+              <dodecahedronGeometry args={[1, 0]} />
+              <meshStandardMaterial color="#8dff7a" emissive="#25561b" flatShading />
+            </mesh>
+          </group>
           <GlowingCracks cracked />
           <ShellShard position={[-0.58, -0.42, 0.24]} rotation={[0.2, 0.3, 0.9]} />
           <ShellShard position={[0.52, -0.41, -0.16]} rotation={[-0.1, 0.8, -0.7]} />
@@ -98,6 +161,10 @@ export default function EggModel({ egg }: { egg: EggState }) {
       )}
     </group>
   );
+}
+
+function easeOut(value: number) {
+  return 1 - Math.pow(1 - value, 3);
 }
 
 function EggParticles({ cracked }: { cracked: boolean }) {

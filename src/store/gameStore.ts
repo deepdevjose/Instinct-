@@ -158,7 +158,7 @@ export const useGameStore = create<GameStore>()(
             if (latest.currentLevelId === level.id) {
               latest.loadLevel(nextLevel.id);
             }
-          }, level.id === 1 ? 4300 : 1600);
+          }, level.id === 1 ? 9000 : 1600);
         }
       },
 
@@ -400,6 +400,7 @@ function getSuccessConsoleLines(
       createConsoleLine("success", "Signal accepted."),
       ...result.output.map((line) => createConsoleLine("output", line)),
       createConsoleLine("success", "The shell begins to crack..."),
+      createConsoleLine("success", "The hatchling pulls free."),
       createConsoleLine("system", `Checkpoint saved: ${levelTitle}.`)
     ];
   }
@@ -534,8 +535,8 @@ function applyActionsToWorld(
     nextWorld.lightLevel = 0.94;
     nextWorld.snake.lifeStage = "hatchling";
     nextWorld.snake.state = "newborn";
-    nextWorld.snake.position = [0.58, 0.24, 0.12];
-    nextWorld.snake.rotation = -0.22;
+    nextWorld.snake.position = [0.56, 0.28, 0.72];
+    nextWorld.snake.rotation = -0.72;
     nextWorld.snake.health = 100;
     nextWorld.snake.energy = 62;
     nextWorld.snake.venom = 4;

@@ -35,7 +35,7 @@ export default function LevelPanel() {
       initial={{ opacity: 0, x: 18 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
-      className="flex h-full min-h-0 flex-col gap-4 border-l border-[#d8b574]/18 bg-[#080b0a]/92 p-4 shadow-2xl backdrop-blur"
+      className="flex h-full min-h-0 flex-col gap-4 border-l border-[#6e5630]/35 bg-[#080b0a]/92 p-4 shadow-2xl backdrop-blur"
     >
       <header className="space-y-3">
         <div className="flex items-center justify-between gap-3">
@@ -87,7 +87,7 @@ export default function LevelPanel() {
         <div className="min-h-[240px] flex-1">
           <Suspense
             fallback={
-              <div className="flex h-full min-h-[240px] items-center justify-center rounded-md border border-[#d8b574]/18 bg-[#0d1110] font-mono text-xs uppercase tracking-[0.24em] text-[#d8b574]/50">
+              <div className="flex h-full min-h-[240px] items-center justify-center rounded-md border border-[#6e5630]/32 bg-[#0d1110] font-mono text-xs uppercase tracking-[0.24em] text-[#d8b574]/50">
                 Loading editor
               </div>
             }

@@ -146,19 +146,44 @@ function NewbornReveal({ visualState }: { visualState: SnakeVisualState }) {
   }
 
   return (
-    <group ref={groupRef}>
-      <pointLight color="#8dff7a" intensity={0.9} distance={2.4} position={[0, 0.35, 0]} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
-        <ringGeometry args={[0.62, 0.73, 24]} />
-        <meshBasicMaterial color="#ffd27a" transparent opacity={0.42} depthWrite={false} />
+    <group ref={groupRef} rotation={[0, 0.35, 0]}>
+      <pointLight color="#8dff7a" intensity={1.4} distance={3.2} position={[0.12, 0.55, 0.04]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.08, 0.08, 0]}>
+        <ringGeometry args={[0.72, 0.84, 28]} />
+        <meshBasicMaterial color="#ffd27a" transparent opacity={0.48} depthWrite={false} />
       </mesh>
-      <mesh position={[0.15, 0.34, 0.12]} rotation={[0.3, 0.2, 0.5]} scale={[0.12, 0.05, 0.12]}>
-        <torusGeometry args={[1, 0.22, 7, 18]} />
-        <meshStandardMaterial color="#8dff7a" emissive="#163d10" roughness={0.8} flatShading />
+
+      <mesh
+        castShadow
+        receiveShadow
+        position={[0.02, 0.28, 0.02]}
+        rotation={[Math.PI / 2, 0.02, 0.18]}
+        scale={[0.52, 0.38, 0.52]}
+      >
+        <torusGeometry args={[1, 0.18, 8, 24]} />
+        <meshStandardMaterial color="#5ca955" emissive="#12310f" roughness={0.84} flatShading />
       </mesh>
-      <mesh position={[0.5, 0.4, 0.12]} scale={[0.12, 0.08, 0.1]}>
+      <mesh
+        castShadow
+        receiveShadow
+        position={[0.36, 0.46, 0.06]}
+        rotation={[0.12, 0, -0.22]}
+        scale={[0.42, 0.16, 0.2]}
+      >
+        <capsuleGeometry args={[0.28, 0.58, 4, 8]} />
+        <meshStandardMaterial color="#6ccf63" emissive="#143c10" roughness={0.82} flatShading />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0.74, 0.52, 0.08]} scale={[0.22, 0.16, 0.18]}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#dfff9b" emissive="#1d4c12" roughness={0.82} flatShading />
+      </mesh>
+      <mesh position={[0.82, 0.56, 0.02]} rotation={[0, 0, -0.6]} scale={[0.16, 0.035, 0.035]}>
+        <coneGeometry args={[1, 1, 4]} />
+        <meshStandardMaterial color="#8dff7a" emissive="#1d4c12" roughness={0.7} flatShading />
+      </mesh>
+      <mesh position={[0.82, 0.5, 0.12]} rotation={[0, 0, 0.6]} scale={[0.16, 0.035, 0.035]}>
+        <coneGeometry args={[1, 1, 4]} />
+        <meshStandardMaterial color="#8dff7a" emissive="#1d4c12" roughness={0.7} flatShading />
       </mesh>
     </group>
   );

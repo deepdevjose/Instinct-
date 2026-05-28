@@ -20,9 +20,10 @@ import {
   X
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import avatarUrl from "../assets/avatar.png";
+import iconUrl from "../assets/icon.png";
 import { levels } from "../game/levels";
 import { useGameStore } from "../store/gameStore";
-import iconUrl from "./icon.png";
 import RoadmapProgress from "./RoadmapProgress";
 
 type MenuSection =
@@ -135,7 +136,7 @@ export default function MainMenu({ onStart }: MainMenuProps) {
                     <img
                       src={iconUrl}
                       alt=""
-                      className="h-16 w-16 rounded-lg border border-[#d8b574]/25 bg-black/35 object-cover"
+                      className="h-16 w-16 rounded-lg border border-[#6e5630]/35 bg-black/35 object-cover"
                     />
                     <div>
                       <p className="font-mono text-sm font-semibold uppercase tracking-[0.24em] text-venom">
@@ -184,14 +185,7 @@ export default function MainMenu({ onStart }: MainMenuProps) {
               <span>to Start</span>
             </div>
 
-            <div className="hud-panel-muted pointer-events-auto absolute bottom-7 right-[min(34vw,34rem)] hidden w-[min(390px,calc(100vw-3rem))] rounded-xl p-4 xl:block">
-              <div className="flex items-center gap-3">
-                <div className="hud-icon-frame flex h-11 w-11 shrink-0 items-center justify-center rounded-lg">
-                  <Sparkles className="h-5 w-5 text-[#d8b574]" />
-                </div>
-                <p className="text-sm leading-6 text-bone/72">{activeTip}</p>
-              </div>
-            </div>
+            <SurvivalTip tip={activeTip} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -216,7 +210,7 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0, y: 12, scale: 0.92 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.65, ease: "easeOut" }}
-        className="h-24 w-24 rounded-2xl border border-[#d8b574]/35 bg-black/35 object-cover shadow-2xl shadow-black/45"
+        className="h-24 w-24 rounded-2xl border border-[#6e5630]/40 bg-black/35 object-cover shadow-2xl shadow-black/45"
       />
       <motion.h1
         initial={{ opacity: 0, y: 14 }}
@@ -238,7 +232,7 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.36, 1, 0.36] }}
         transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.35 }}
-        className="mt-12 rounded-lg border border-[#d8b574]/28 bg-black/30 px-5 py-3 font-mono text-xs uppercase tracking-[0.22em] text-bone/72 backdrop-blur-xl"
+        className="mt-12 rounded-lg border border-[#6e5630]/36 bg-black/30 px-5 py-3 font-mono text-xs uppercase tracking-[0.22em] text-bone/72 backdrop-blur-xl"
       >
         Press Enter / Click to Start
       </motion.div>
@@ -257,7 +251,7 @@ function MenuHeader({
         <img
           src={iconUrl}
           alt=""
-          className="h-16 w-16 rounded-xl border border-[#d8b574]/35 bg-black/35 object-cover shadow-2xl shadow-black/35"
+          className="h-16 w-16 rounded-xl border border-[#6e5630]/40 bg-black/35 object-cover shadow-2xl shadow-black/35"
         />
         <div>
           <p className="font-mono text-3xl font-semibold uppercase tracking-[0.28em] text-venom drop-shadow-[0_0_16px_rgba(141,255,122,0.32)] sm:text-5xl">
@@ -288,7 +282,7 @@ function IconButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#d8b574]/28 bg-black/28 text-[#d8b574] backdrop-blur-xl transition hover:border-venom/45 hover:text-venom"
+      className="flex h-12 w-12 items-center justify-center rounded-lg bg-black/24 text-[#d8b574] shadow-[inset_0_0_0_1px_rgba(58,45,25,0.42),0_14px_34px_rgba(0,0,0,0.28)] backdrop-blur-xl transition hover:bg-venom/10 hover:text-venom hover:shadow-[inset_0_0_0_1px_rgba(141,255,122,0.18),0_14px_34px_rgba(0,0,0,0.28)]"
       aria-label={label}
       title={label}
     >
@@ -382,6 +376,19 @@ function MainOptions({
       <p className="pt-2 text-right font-mono text-[11px] uppercase tracking-[0.18em] text-bone/34">
         Version 0.1 Alpha
       </p>
+    </div>
+  );
+}
+
+function SurvivalTip({ tip }: { tip: string }) {
+  return (
+    <div className="hud-panel-muted pointer-events-auto absolute bottom-14 left-1/2 hidden w-[390px] -translate-x-1/2 rounded-xl p-4 xl:block">
+      <div className="flex items-center gap-3">
+        <div className="hud-icon-frame flex h-11 w-11 shrink-0 items-center justify-center rounded-lg">
+          <Sparkles className="h-5 w-5 text-[#d8b574]" />
+        </div>
+        <p className="text-sm leading-6 text-bone/72">{tip}</p>
+      </div>
     </div>
   );
 }
@@ -581,9 +588,22 @@ function CreditsPanel() {
   return (
     <div className="space-y-4">
       <section className="hud-panel-muted rounded-lg p-5">
-        <p className="text-2xl font-semibold text-bone">INSTINCT()</p>
-        <p className="mt-2 text-sm leading-6 text-bone/62">
-          A survival compiler prototype for learning Python through a serpent's life.
+        <div className="flex items-center gap-4">
+          <img
+            src={avatarUrl}
+            alt=""
+            className="h-16 w-16 rounded-lg bg-black/35 object-cover shadow-[inset_0_0_0_1px_rgba(58,45,25,0.42)]"
+          />
+          <div>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-venom">
+              Game Developer
+            </p>
+            <p className="mt-1 text-2xl font-semibold text-bone">INSTINCT()</p>
+          </div>
+        </div>
+        <p className="mt-4 text-sm leading-6 text-bone/62">
+          Survival compiler prototype, game design, programming, UI direction and
+          learning system.
         </p>
       </section>
       {[

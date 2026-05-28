@@ -39,7 +39,7 @@ export default function Console({ lines, compact = false, className = "" }: Cons
       className={`hud-panel-muted flex min-h-0 flex-col rounded-lg ${className}`}
     >
       <div
-        className={`flex items-center gap-2 border-b border-[#d8b574]/15 px-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#d8b574]/60 ${
+        className={`flex items-center gap-2 border-b border-[#6e5630]/35 px-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#d8b574]/60 ${
           compact ? "h-9" : "h-10"
         }`}
       >

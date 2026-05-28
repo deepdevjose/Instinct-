@@ -12,7 +12,7 @@ interface CodeEditorProps {
 
 export default function CodeEditor({ value, levelId, onChange }: CodeEditorProps) {
   return (
-    <div className="h-full overflow-hidden rounded-md border border-[#d8b574]/15 bg-[#111318]">
+    <div className="h-full overflow-hidden rounded-md bg-[#0b100d] shadow-[inset_0_0_0_1px_rgba(18,27,18,0.9),inset_0_0_36px_rgba(0,0,0,0.38)]">
       <Editor
         path={`instinct-level-${levelId}.py`}
         height="100%"

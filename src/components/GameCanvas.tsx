@@ -131,7 +131,7 @@ function CinematicCamera({ world }: { world: WorldState }) {
     }
 
     if (isHatching) {
-      target.set(0.55, 0.48, 0.12);
+      target.set(0.56, 0.62, 0.62);
     }
 
     if (isFailure) {

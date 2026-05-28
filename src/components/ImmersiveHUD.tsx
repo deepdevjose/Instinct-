@@ -25,10 +25,10 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent
 } from "react";
+import iconUrl from "../assets/icon.png";
 import { getLevelById } from "../game/levels";
 import { useGameStore } from "../store/gameStore";
 import Console from "./Console";
-import iconUrl from "./icon.png";
 import RoadmapProgress from "./RoadmapProgress";
 
 const CodeEditor = lazy(() => import("./CodeEditor"));
@@ -61,8 +61,11 @@ export default function ImmersiveHUD({ onSaveAndExit }: ImmersiveHUDProps) {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_45%,rgba(242,195,107,0.14),transparent_18rem),radial-gradient(circle_at_78%_62%,rgba(141,255,122,0.08),transparent_24rem),linear-gradient(90deg,rgba(0,0,0,0.34),transparent_38%,rgba(0,0,0,0.42))]" />
 
       <TopIdentity />
-      <LevelBadge levelId={level.id} act={level.act} />
-      <SaveExitButton onSaveAndExit={onSaveAndExit} />
+      <TopRightControls
+        levelId={level.id}
+        act={level.act}
+        onSaveAndExit={onSaveAndExit}
+      />
       <ObjectiveCard
         title={level.title}
         narrative={level.narrative}
@@ -118,6 +121,23 @@ export default function ImmersiveHUD({ onSaveAndExit }: ImmersiveHUDProps) {
   );
 }
 
+function TopRightControls({
+  levelId,
+  act,
+  onSaveAndExit
+}: {
+  levelId: number;
+  act: string;
+  onSaveAndExit: () => void;
+}) {
+  return (
+    <div className="pointer-events-auto absolute right-4 top-4 z-20 flex flex-col-reverse items-end gap-2 sm:right-5 sm:top-5 sm:flex-row sm:items-stretch">
+      <SaveExitButton onSaveAndExit={onSaveAndExit} />
+      <LevelBadge levelId={levelId} act={act} />
+    </div>
+  );
+}
+
 function SaveExitButton({ onSaveAndExit }: { onSaveAndExit: () => void }) {
   return (
     <motion.button
@@ -126,7 +146,7 @@ function SaveExitButton({ onSaveAndExit }: { onSaveAndExit: () => void }) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut", delay: 0.12 }}
-      className="hud-control pointer-events-auto absolute right-4 top-20 flex h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-[#f3d491] transition hover:text-venom sm:right-[15rem] sm:top-5 sm:px-4"
+      className="hud-control flex h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-[#f3d491] transition hover:text-venom sm:h-auto sm:px-4"
       aria-label="Save and exit"
       title="Save and exit"
     >
@@ -146,7 +166,7 @@ function TopIdentity() {
       className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 sm:left-5 sm:top-5"
     >
       <div className="hud-panel-muted relative flex h-14 w-14 items-center justify-center rounded-lg">
-        <div className="absolute inset-1 rounded-md border border-venom/10" />
+        <div className="absolute inset-1 rounded-md border border-venom/[0.055]" />
         <img
           src={iconUrl}
           alt=""
@@ -169,7 +189,7 @@ function LevelBadge({ levelId, act }: { levelId: number; act: string }) {
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
-      className="hud-panel-muted pointer-events-auto absolute right-4 top-4 rounded-lg px-3 py-3 sm:right-5 sm:top-5 sm:px-4"
+      className="hud-panel-muted rounded-lg px-3 py-3 sm:px-4"
     >
       <div className="flex items-center gap-3">
         <div className="hud-icon-frame flex h-10 w-10 items-center justify-center rounded-md">
@@ -204,7 +224,7 @@ function ObjectiveCard({
       transition={{ duration: 0.45, ease: "easeOut", delay: 0.12 }}
       className="hud-panel pointer-events-auto absolute right-4 top-28 hidden w-[min(430px,calc(100vw-2rem))] overflow-hidden rounded-xl p-4 md:block"
     >
-      <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-[#ffd27a]/70 to-transparent" />
+      <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-[#7b6338]/45 to-transparent" />
       <div className="flex gap-4">
         <div className="hud-icon-frame flex h-14 w-14 shrink-0 items-center justify-center rounded-lg">
           <BookOpen className="h-6 w-6 text-[#d8b574]" />
@@ -434,11 +454,11 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
       style={{ translate: `${position.x}px ${position.y}px` }}
     >
       <div className="hud-panel relative overflow-hidden rounded-xl">
-        <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#ffd27a]/65 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#7b6338]/38 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(216,181,116,0.13),transparent_16rem),radial-gradient(circle_at_92%_18%,rgba(141,255,122,0.09),transparent_14rem)]" />
         <div
           onPointerDown={startDrag}
-          className="relative flex cursor-grab items-center justify-between gap-3 border-b border-[#d8b574]/20 px-4 py-3 active:cursor-grabbing"
+          className="relative flex cursor-grab items-center justify-between gap-3 border-b border-[#6e5630]/35 px-4 py-3 active:cursor-grabbing"
         >
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
@@ -459,7 +479,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden items-center gap-2 rounded-md border border-[#d8b574]/18 bg-[#d8b574]/[0.045] px-3 py-1.5 text-xs text-bone/62 sm:flex">
+            <div className="hidden items-center gap-2 rounded-md border border-[#6e5630]/32 bg-[#d8b574]/[0.035] px-3 py-1.5 text-xs text-bone/62 sm:flex">
               <Shield className="h-3.5 w-3.5 text-venom" />
               Python
               <ChevronDown className="h-3.5 w-3.5 text-[#d8b574]/46" />
@@ -476,7 +496,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="relative p-3">
-          <div className="h-[190px] overflow-hidden rounded-lg border border-[#d8b574]/18 bg-black/24 sm:h-[min(30vh,250px)] sm:min-h-[210px]">
+          <div className="h-[190px] overflow-hidden rounded-lg bg-black/24 shadow-[inset_0_0_0_1px_rgba(18,27,18,0.92),inset_0_0_42px_rgba(0,0,0,0.34)] sm:h-[min(30vh,250px)] sm:min-h-[210px]">
             <Suspense
               fallback={
                 <div className="flex h-full items-center justify-center font-mono text-xs uppercase tracking-[0.24em] text-[#d8b574]/50">
@@ -518,7 +538,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
               transition={{ duration: 1.55, repeat: Infinity, ease: "easeInOut" }}
               className={`flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold text-black transition ${
                 runStatus === "failure"
-                  ? "border border-red-300/50 bg-red-300 hover:bg-red-200"
+                  ? "border border-red-900/45 bg-red-300 hover:bg-red-200"
                   : "hud-control-primary hover:bg-[#b8ffa8]"
               }`}
             >
