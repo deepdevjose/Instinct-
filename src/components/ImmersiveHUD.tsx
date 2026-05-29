@@ -25,7 +25,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent
 } from "react";
-import iconUrl from "../assets/icon.png";
+import iconUrl from "../assets/icon.webp";
 import { getLevelById } from "../game/levels";
 import { useGameStore } from "../store/gameStore";
 import Console from "./Console";
@@ -55,6 +55,11 @@ export default function ImmersiveHUD({ onSaveAndExit }: ImmersiveHUDProps) {
     () => typeof window === "undefined" || window.innerWidth >= 640
   );
   const [roadmapOpen, setRoadmapOpen] = useState(false);
+  const [lessonOpen, setLessonOpen] = useState(true);
+
+  useEffect(() => {
+    setLessonOpen(true);
+  }, [currentLevelId]);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
@@ -69,9 +74,24 @@ export default function ImmersiveHUD({ onSaveAndExit }: ImmersiveHUDProps) {
       <ObjectiveCard
         title={level.title}
         narrative={level.narrative}
+        pythonConcept={level.pythonConcept}
         objective={level.objective}
       />
       <StatsHUD health={snake.health} energy={snake.energy} venom={snake.venom} />
+
+      <AnimatePresence>
+        {lessonOpen ? (
+          <LessonIntro
+            key={level.id}
+            title={level.title}
+            objective={level.objective}
+            pythonConcept={level.pythonConcept}
+            studyNotes={level.studyNotes}
+            commands={level.unlockedCommands}
+            onClose={() => setLessonOpen(false)}
+          />
+        ) : null}
+      </AnimatePresence>
 
       <div className="pointer-events-auto absolute left-4 top-20 z-20 flex flex-wrap items-end gap-3 sm:bottom-5 sm:left-5 sm:top-auto">
         <RoadmapButton
@@ -93,13 +113,13 @@ export default function ImmersiveHUD({ onSaveAndExit }: ImmersiveHUDProps) {
             <div className="hud-panel rounded-xl p-2">
               <div className="mb-2 flex items-center justify-between px-2 py-1">
                 <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#d8b574]">
-                  Bloodline Roadmap
+                  Ruta de aprendizaje
                 </span>
                 <button
                   type="button"
                   onClick={() => setRoadmapOpen(false)}
                   className="rounded-md p-1 text-[#d8b574]/60 transition hover:bg-[#d8b574]/10 hover:text-bone"
-                  aria-label="Close roadmap"
+                  aria-label="Cerrar ruta"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -147,11 +167,11 @@ function SaveExitButton({ onSaveAndExit }: { onSaveAndExit: () => void }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut", delay: 0.12 }}
       className="hud-control flex h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-[#f3d491] transition hover:text-venom sm:h-auto sm:px-4"
-      aria-label="Save and exit"
-      title="Save and exit"
+      aria-label="Guardar y salir"
+      title="Guardar y salir"
     >
       <Save className="h-4 w-4" />
-      <span className="hidden sm:inline">Save & Exit</span>
+      <span className="hidden sm:inline">Guardar y salir</span>
       <LogOut className="hidden h-4 w-4 text-[#d8b574]/42 sm:block" />
     </motion.button>
   );
@@ -177,7 +197,7 @@ function TopIdentity() {
         <p className="font-mono text-sm font-semibold uppercase tracking-[0.34em] text-venom drop-shadow-[0_0_10px_rgba(141,255,122,0.34)]">
           INSTINCT()
         </p>
-        <p className="mt-1 text-sm text-bone/72">Survival Compiler</p>
+        <p className="mt-1 text-sm text-bone/72">Código de Supervivencia</p>
       </div>
     </motion.header>
   );
@@ -197,7 +217,7 @@ function LevelBadge({ levelId, act }: { levelId: number; act: string }) {
         </div>
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#d8b574]/58">
-            Level {String(levelId).padStart(2, "0")} / 45
+            Nivel {String(levelId).padStart(2, "0")} / 45
           </p>
           <p className="mt-0.5 text-sm font-semibold uppercase tracking-[0.1em] text-bone">
             {formatActLabel(act)}
@@ -211,10 +231,12 @@ function LevelBadge({ levelId, act }: { levelId: number; act: string }) {
 function ObjectiveCard({
   title,
   narrative,
+  pythonConcept,
   objective
 }: {
   title: string;
   narrative: string;
+  pythonConcept: string;
   objective: string;
 }) {
   return (
@@ -234,12 +256,107 @@ function ObjectiveCard({
           <p className="mt-2 text-sm leading-6 text-bone/72">{narrative}</p>
           <p className="mt-3 text-sm leading-6 text-[#f3d491]">
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-venom">
-              Objective:
+              Objetivo:
             </span>{" "}
             {objective}
           </p>
+          <p className="mt-2 text-xs leading-5 text-bone/56">
+            <span className="font-mono uppercase tracking-[0.16em] text-[#d8b574]/70">
+              Teoría:
+            </span>{" "}
+            {pythonConcept}
+          </p>
         </div>
       </div>
+    </motion.section>
+  );
+}
+
+function LessonIntro({
+  title,
+  objective,
+  pythonConcept,
+  studyNotes,
+  commands,
+  onClose
+}: {
+  title: string;
+  objective: string;
+  pythonConcept: string;
+  studyNotes: string[];
+  commands: string[];
+  onClose: () => void;
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 24, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 18, scale: 0.96 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      className="pointer-events-auto absolute left-1/2 top-24 z-30 w-[min(620px,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl bg-[#07100a]/88 p-5 text-bone shadow-[inset_0_0_0_1px_rgba(95,76,42,0.42),0_24px_80px_rgba(0,0,0,0.54)] backdrop-blur-xl md:left-[42%] md:translate-x-0"
+    >
+      <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-venom/45 to-transparent" />
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.24em] text-venom">
+            Preparación
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-bone">{title}</h2>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg bg-[#d8b574]/[0.06] p-2 text-[#d8b574]/72 transition hover:bg-venom/10 hover:text-venom"
+          aria-label="Cerrar teoría"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
+        <section className="rounded-xl bg-black/24 p-4 shadow-[inset_0_0_0_1px_rgba(58,45,25,0.45)]">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d8b574]">
+            Teoría clave
+          </p>
+          <p className="mt-2 text-sm leading-6 text-bone/74">{pythonConcept}</p>
+          <div className="mt-3 space-y-2">
+            {studyNotes.map((note) => (
+              <div key={note} className="flex gap-2 text-sm leading-6 text-bone/68">
+                <Sparkles className="mt-1 h-4 w-4 shrink-0 text-venom" />
+                <span>{note}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-xl bg-black/24 p-4 shadow-[inset_0_0_0_1px_rgba(58,45,25,0.45)]">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d8b574]">
+            Misión
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[#f3d491]">{objective}</p>
+          <p className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d8b574]">
+            Comandos disponibles
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {commands.map((command) => (
+              <span
+                key={command}
+                className="rounded-md bg-venom/[0.09] px-2.5 py-1 font-mono text-[11px] text-venom shadow-[inset_0_0_0_1px_rgba(141,255,122,0.12)]"
+              >
+                {command}
+              </span>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <button
+        type="button"
+        onClick={onClose}
+        className="mt-4 flex h-11 w-full items-center justify-center rounded-lg bg-venom px-4 text-sm font-semibold text-black shadow-[0_0_28px_rgba(141,255,122,0.28)] transition hover:bg-[#b8ffa8]"
+      >
+        Listo, abrir el editor
+      </button>
     </motion.section>
   );
 }
@@ -260,9 +377,9 @@ function StatsHUD({
       transition={{ duration: 0.45, ease: "easeOut", delay: 0.1 }}
       className="hud-panel-muted pointer-events-auto absolute bottom-20 left-4 hidden w-[min(330px,calc(100vw-2rem))] rounded-xl p-4 sm:bottom-24 sm:left-5 sm:block"
     >
-      <StatPips icon={Heart} label="Health" value={health} tone="#8dff7a" />
-      <StatPips icon={Zap} label="Energy" value={energy} tone="#ffd27a" />
-      <StatPips icon={Skull} label="Venom" value={venom} tone="#a7ff87" />
+      <StatPips icon={Heart} label="Salud" value={health} tone="#8dff7a" />
+      <StatPips icon={Zap} label="Energía" value={energy} tone="#ffd27a" />
+      <StatPips icon={Skull} label="Veneno" value={venom} tone="#a7ff87" />
     </motion.section>
   );
 }
@@ -328,7 +445,7 @@ function RoadmapButton({
     >
       <Map className="h-5 w-5" />
       <span className="hidden sm:inline">
-        {isOpen ? "Close Roadmap" : "Open Roadmap"}
+        {isOpen ? "Cerrar ruta" : "Abrir ruta"}
       </span>
     </button>
   );
@@ -337,22 +454,22 @@ function RoadmapButton({
 function StatusPill({ status }: { status: string }) {
   const label = useMemo(() => {
     if (status === "running") {
-      return "RUNNING...";
+      return "EJECUTANDO...";
     }
 
     if (status === "success") {
-      return "SIGNAL ACCEPTED";
+      return "SEÑAL ACEPTADA";
     }
 
     if (status === "failure") {
-      return "SIGNAL REJECTED";
+      return "SEÑAL RECHAZADA";
     }
 
     if (status === "checkpoint") {
-      return "CHECKPOINT RESTORED";
+      return "CHECKPOINT RESTAURADO";
     }
 
-    return "CODE READY";
+    return "CÓDIGO LISTO";
   }, [status]);
 
   return (
@@ -470,7 +587,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
               <Code2 className="h-4 w-4 text-venom" />
               <div>
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.24em] text-venom">
-                  Instinct Script
+                  Script de Instinto
                 </p>
                 <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.22em] text-[#d8b574]/76">
                   HATCHLING.PY
@@ -488,7 +605,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
               type="button"
               onClick={onClose}
               className="rounded-md p-1.5 text-[#d8b574]/58 transition hover:bg-[#d8b574]/10 hover:text-bone"
-              aria-label="Close code editor"
+              aria-label="Cerrar editor de código"
             >
               <X className="h-4 w-4" />
             </button>
@@ -500,7 +617,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
             <Suspense
               fallback={
                 <div className="flex h-full items-center justify-center font-mono text-xs uppercase tracking-[0.24em] text-[#d8b574]/50">
-                  Loading editor
+                  Cargando editor
                 </div>
               }
             >
@@ -543,7 +660,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
               }`}
             >
               <Play className="h-4 w-4" />
-              {runStatus === "running" ? "Running" : "Run Signal"}
+              {runStatus === "running" ? "Ejecutando" : "Ejecutar señal"}
             </motion.button>
             <button
               type="button"
@@ -551,7 +668,7 @@ function FloatingCodeDock({ onClose }: { onClose: () => void }) {
               className="hud-control flex h-12 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold text-bone/72 transition hover:text-bone"
             >
               <RotateCcw className="h-4 w-4" />
-              Reset
+              Reiniciar
             </button>
           </div>
         </div>
@@ -573,7 +690,7 @@ function OpenCodeButton({ onClick }: { onClick: () => void }) {
       className="hud-control pointer-events-auto absolute bottom-4 right-4 z-20 flex h-12 items-center gap-2 rounded-lg px-4 text-sm font-semibold text-venom transition sm:bottom-5 sm:right-5"
     >
       <Code2 className="h-5 w-5" />
-      Open Code
+      Abrir código
     </motion.button>
   );
 }

@@ -1,7 +1,13 @@
-import { ContactShadows, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import {
+  AdaptiveEvents,
+  ContactShadows,
+  OrbitControls,
+  PerformanceMonitor,
+  PerspectiveCamera
+} from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { MathUtils, Vector3 } from "three";
 import type { WorldState } from "../game/entities";
 import { useGameStore } from "../store/gameStore";
@@ -12,16 +18,27 @@ import SnakeModel from "./SnakeModel";
 
 export default function GameCanvas() {
   const world = useGameStore((state) => state.world);
+  const maxPixelRatio = getMaxPixelRatio();
+  const [pixelRatio, setPixelRatio] = useState(() => maxPixelRatio);
 
   return (
     <Canvas
       shadows
-      dpr={[1, 1.6]}
-      gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+      dpr={pixelRatio}
+      gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
       camera={{ position: [7.5, 6.1, 7.5], fov: 42 }}
     >
       <Suspense fallback={null}>
-        <Scene />
+        <PerformanceMonitor
+          bounds={(refreshRate) => [Math.max(34, refreshRate * 0.68), refreshRate * 0.94]}
+          flipflops={3}
+          onDecline={() => setPixelRatio((value) => clampDpr(value - 0.18, maxPixelRatio))}
+          onIncline={() => setPixelRatio((value) => clampDpr(value + 0.1, maxPixelRatio))}
+          onFallback={() => setPixelRatio(0.82)}
+        >
+          <AdaptiveEvents />
+          <Scene />
+        </PerformanceMonitor>
       </Suspense>
     </Canvas>
   );
@@ -82,10 +99,11 @@ export default function GameCanvas() {
         </Physics>
 
         <ContactShadows
+          frames={1}
           position={[0, 0.01, 0]}
-          opacity={0.24}
+          opacity={0.2}
           scale={14}
-          blur={2.2}
+          blur={1.8}
           far={7}
         />
         <OrbitControls
@@ -100,6 +118,18 @@ export default function GameCanvas() {
       </>
     );
   }
+}
+
+function getMaxPixelRatio() {
+  if (typeof window === "undefined") {
+    return 1;
+  }
+
+  return Math.min(1.25, Math.max(1, window.devicePixelRatio || 1));
+}
+
+function clampDpr(value: number, max = 1.25) {
+  return Math.min(max, Math.max(0.82, Number(value.toFixed(2))));
 }
 
 function CinematicCamera({ world }: { world: WorldState }) {

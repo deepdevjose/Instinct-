@@ -44,7 +44,7 @@ export default function Console({ lines, compact = false, className = "" }: Cons
         }`}
       >
         <Terminal className="h-4 w-4 text-venom" />
-        Console
+        Consola
       </div>
       <div
         ref={scrollRef}

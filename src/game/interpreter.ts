@@ -43,7 +43,7 @@ export function executePlayerCode(code: string, level: Level): InterpreterResult
       ok: false,
       actions: [],
       output: [],
-      error: "This roadmap level is defined, but its encounter is not playable in the prototype yet."
+      error: "Este nivel de la ruta ya está definido, pero su encuentro todavía no es jugable en el prototipo."
     };
   }
 
@@ -82,7 +82,7 @@ export function executePlayerCode(code: string, level: Level): InterpreterResult
       const call = line.match(CALL_PATTERN);
 
       if (!call) {
-        errors.push(`Cannot understand line: ${line}`);
+        errors.push(`No pude entender la línea: ${line}`);
         continue;
       }
 
@@ -90,12 +90,12 @@ export function executePlayerCode(code: string, level: Level): InterpreterResult
       const commandName = rawName as CommandName;
 
       if (!COMMANDS.includes(commandName)) {
-        errors.push(`Unknown command: ${rawName}()`);
+        errors.push(`Comando desconocido: ${rawName}()`);
         continue;
       }
 
       if (!isCommandUnlocked(commandName, level.unlockedCommands)) {
-        errors.push(`${rawName}() is not unlocked in this level.`);
+        errors.push(`${rawName}() no está desbloqueado en este nivel.`);
         continue;
       }
 
@@ -166,7 +166,7 @@ function getCommandAmount(
   const value = evaluateExpression(rawArgs, variables);
 
   if (typeof value !== "number" || Number.isNaN(value)) {
-    throw new Error("Command counts must be numeric.");
+    throw new Error("La cantidad de un comando debe ser numérica.");
   }
 
   return Math.max(1, Math.min(8, Math.floor(value)));
@@ -215,20 +215,20 @@ function evaluateNumericExpression(
     const value = variables[name];
 
     if (typeof value !== "number") {
-      throw new Error(`Variable ${name} is not numeric.`);
+      throw new Error(`La variable ${name} no es numérica.`);
     }
 
     return String(value);
   });
 
   if (!/^[\d\s+\-*/().]+$/.test(replaced)) {
-    throw new Error(`Unsupported expression: ${expression}`);
+    throw new Error(`Expresión no soportada: ${expression}`);
   }
 
   const result = Function(`"use strict"; return (${replaced});`)() as unknown;
 
   if (typeof result !== "number" || Number.isNaN(result)) {
-    throw new Error(`Expression did not return a number: ${expression}`);
+    throw new Error(`La expresión no regresó un número: ${expression}`);
   }
 
   return result;
@@ -287,5 +287,5 @@ function countCommand(trace: Trace, commandName: CommandName): number {
 
 function buildFailureMessage(level: Level): string {
   const patterns = level.expectedPatterns.join(", ");
-  return `Pattern not complete for ${level.title}. Expected: ${patterns}.`;
+  return `Patrón incompleto en ${level.title}. Se esperaba: ${patterns}.`;
 }

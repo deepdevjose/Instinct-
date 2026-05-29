@@ -111,6 +111,7 @@ export interface Level {
   act: string;
   narrative: string;
   pythonConcept: string;
+  studyNotes: string[];
   objective: string;
   starterCode: string;
   expectedPatterns: string[];
@@ -152,7 +153,7 @@ export const basePredators: PredatorEntity[] = [
   {
     id: "lantern-hunter",
     kind: "hunter",
-    position: [3.2, 0.25, -2.5],
+    position: [1.2, 0.02, -1.85],
     detectionRange: 4,
     behavior: "patrol",
     visualState: "patrolling",
@@ -161,7 +162,7 @@ export const basePredators: PredatorEntity[] = [
   {
     id: "ridge-hunter",
     kind: "hunter",
-    position: [-3.4, 0.25, 2.2],
+    position: [-3.2, 0.02, 2.15],
     detectionRange: 3,
     behavior: "scan",
     visualState: "searching",

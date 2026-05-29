@@ -36,8 +36,8 @@ interface GameStore {
 const initialLevel = levels[0];
 
 const initialConsole = [
-  createConsoleLine("system", "INSTINCT() runtime armed."),
-  createConsoleLine("hint", 'First signal loaded. Run print("Hello World").')
+  createConsoleLine("system", "Runtime de INSTINCT() listo."),
+  createConsoleLine("hint", 'Primera señal cargada. Ejecuta print("Hello World").')
 ];
 
 export const useGameStore = create<GameStore>()(
@@ -68,7 +68,7 @@ export const useGameStore = create<GameStore>()(
           set({
             consoleLines: [
               ...state.consoleLines,
-              createConsoleLine("hint", `Level ${targetId} is still locked.`)
+              createConsoleLine("hint", `El nivel ${targetId} todavía está bloqueado.`)
             ].slice(-28)
           });
           return;
@@ -86,7 +86,7 @@ export const useGameStore = create<GameStore>()(
           world,
           runStatus: "idle",
           consoleLines: [
-            createConsoleLine("system", `Loaded ${level.title}.`),
+            createConsoleLine("system", `Nivel cargado: ${level.title}.`),
             createConsoleLine("hint", level.objective)
           ]
         });
@@ -99,7 +99,7 @@ export const useGameStore = create<GameStore>()(
           runStatus: "running",
           consoleLines: [
             ...state.consoleLines,
-            createConsoleLine("system", "Signal sent.")
+            createConsoleLine("system", "Señal enviada.")
           ].slice(-28)
         });
         const result = executePlayerCode(state.code, level);
@@ -146,7 +146,7 @@ export const useGameStore = create<GameStore>()(
                 ...consoleLines,
                 createConsoleLine(
                   "hint",
-                  "The next roadmap node is unlocked, but only levels 1 through 5 are fully playable in this prototype."
+                  "El siguiente nodo de la ruta está desbloqueado, pero solo los niveles 1 al 5 son totalmente jugables en este prototipo."
                 )
               ].slice(-28)
         });
@@ -186,7 +186,7 @@ export const useGameStore = create<GameStore>()(
         if (attempt > level.maxAttempts) {
           const fallbackMessage =
             level.id === 1
-              ? "Level 1 has no earlier checkpoint. A clearer guide has been loaded."
+              ? "El nivel 1 no tiene un checkpoint anterior. Se cargó una guía más clara."
               : "El instinto aún no está listo. Regresa, aprende y vuelve más fuerte.";
 
           set({
@@ -195,7 +195,7 @@ export const useGameStore = create<GameStore>()(
             consoleLines: [
               ...state.consoleLines,
               ...outputLines,
-              createConsoleLine("error", "Signal rejected."),
+              createConsoleLine("error", "Señal rechazada."),
               createConsoleLine("error", formatFailureMessage(level.id, message)),
               createConsoleLine("hint", fallbackMessage)
             ].slice(-28)
@@ -229,11 +229,11 @@ export const useGameStore = create<GameStore>()(
           consoleLines: [
             ...state.consoleLines,
             ...outputLines,
-            createConsoleLine("system", `Returned to ${level.title}.`),
-            createConsoleLine("error", "Signal rejected."),
+            createConsoleLine("system", `Regresaste a ${level.title}.`),
+            createConsoleLine("error", "Señal rechazada."),
             createConsoleLine("error", formatFailureMessage(level.id, message)),
-            createConsoleLine("hint", `Hint: ${getHintForAttempt(level, attempt)}`),
-            createConsoleLine("system", "Restoring checkpoint...")
+            createConsoleLine("hint", `Pista: ${getHintForAttempt(level, attempt)}`),
+            createConsoleLine("system", "Restaurando checkpoint...")
           ].slice(-28)
         });
 
@@ -262,7 +262,7 @@ export const useGameStore = create<GameStore>()(
           runStatus: "checkpoint",
           consoleLines: [
             ...state.consoleLines,
-            createConsoleLine("system", `Restoring checkpoint: ${level.title}.`)
+            createConsoleLine("system", `Restaurando checkpoint: ${level.title}.`)
           ].slice(-28)
         });
       },
@@ -282,7 +282,7 @@ export const useGameStore = create<GameStore>()(
           world: createWorldFromSavedCheckpoint(previousLevel.id, checkpointsByLevel),
           runStatus: "idle",
           consoleLines: [
-            createConsoleLine("system", `Returned to ${previousLevel.title}.`),
+            createConsoleLine("system", `Regresaste a ${previousLevel.title}.`),
             createConsoleLine(
               "hint",
               "El instinto aún no está listo. Regresa, aprende y vuelve más fuerte."
@@ -344,7 +344,7 @@ export const useGameStore = create<GameStore>()(
           code: level.starterCode,
           world: createWorldFromSavedCheckpoint(level.id, checkpointsByLevel),
           consoleLines: [
-            createConsoleLine("system", `Loaded ${level.title}.`),
+            createConsoleLine("system", `Nivel cargado: ${level.title}.`),
             createConsoleLine("hint", level.objective)
           ],
           runStatus: "idle"
@@ -397,34 +397,34 @@ function getSuccessConsoleLines(
   if (levelId === 1) {
     return [
       ...existingLines,
-      createConsoleLine("success", "Signal accepted."),
+      createConsoleLine("success", "Señal aceptada."),
       ...result.output.map((line) => createConsoleLine("output", line)),
-      createConsoleLine("success", "The shell begins to crack..."),
-      createConsoleLine("success", "The hatchling pulls free."),
-      createConsoleLine("system", `Checkpoint saved: ${levelTitle}.`)
+      createConsoleLine("success", "El cascarón empieza a romperse..."),
+      createConsoleLine("success", "La cría logra salir."),
+      createConsoleLine("system", `Checkpoint guardado: ${levelTitle}.`)
     ];
   }
 
   return [
     ...existingLines,
-    createConsoleLine("success", "Signal accepted."),
+    createConsoleLine("success", "Señal aceptada."),
     ...result.output.map((line) => createConsoleLine("output", line)),
     createConsoleLine("success", getSuccessNarrative(levelId)),
-    createConsoleLine("system", `Checkpoint saved: ${levelTitle}.`)
+    createConsoleLine("system", `Checkpoint guardado: ${levelTitle}.`)
   ];
 }
 
 function getSuccessNarrative(levelId: number) {
   if (levelId === 1) {
-    return "The shell begins to crack...";
+    return "El cascarón empieza a romperse...";
   }
 
-  return "The instinct holds. The action completes.";
+  return "El instinto responde. La acción se completa.";
 }
 
 function formatFailureMessage(levelId: number, fallback: string) {
   if (levelId === 1) {
-    return "The shell did not recognize your signal. Try printing exactly \"Hello World\".";
+    return "El cascarón no reconoció la señal. Intenta imprimir exactamente \"Hello World\".";
   }
 
   return fallback;

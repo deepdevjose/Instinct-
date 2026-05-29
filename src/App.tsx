@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import GameCanvas from "./components/GameCanvas";
-import ImmersiveHUD from "./components/ImmersiveHUD";
-import MainMenu from "./components/MainMenu";
+
+const ImmersiveHUD = lazy(() => import("./components/ImmersiveHUD"));
+const MainMenu = lazy(() => import("./components/MainMenu"));
 
 export default function App() {
   const [screen, setScreen] = useState<"menu" | "game">(() =>
@@ -15,11 +16,13 @@ export default function App() {
       <div className="absolute inset-0">
         <GameCanvas />
       </div>
-      {screen === "game" ? (
-        <ImmersiveHUD onSaveAndExit={() => setScreen("menu")} />
-      ) : (
-        <MainMenu onStart={() => setScreen("game")} />
-      )}
+      <Suspense fallback={null}>
+        {screen === "game" ? (
+          <ImmersiveHUD onSaveAndExit={() => setScreen("menu")} />
+        ) : (
+          <MainMenu onStart={() => setScreen("game")} />
+        )}
+      </Suspense>
     </main>
   );
 }

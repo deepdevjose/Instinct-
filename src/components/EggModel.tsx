@@ -4,6 +4,14 @@ import type { Group, Mesh } from "three";
 import type { EggState } from "../game/entities";
 
 export default function EggModel({ egg }: { egg: EggState }) {
+  if (!egg.visible) {
+    return null;
+  }
+
+  return <VisibleEggModel egg={egg} />;
+}
+
+function VisibleEggModel({ egg }: { egg: EggState }) {
   const groupRef = useRef<Group>(null);
   const glowRef = useRef<Mesh>(null);
   const haloRef = useRef<Mesh>(null);
@@ -87,10 +95,6 @@ export default function EggModel({ egg }: { egg: EggState }) {
       burstRef.current.scale.setScalar(egg.cracked ? 1 + Math.sin(clock.elapsedTime * 8) * 0.08 : 0.001);
     }
   });
-
-  if (!egg.visible) {
-    return null;
-  }
 
   return (
     <group ref={groupRef} position={[0, 0.42, 0]}>

@@ -27,6 +27,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ["monaco-editor", "@react-three/fiber", "@react-three/drei"]
+    include: ["@react-three/fiber", "@react-three/drei"]
   }
 });

@@ -42,7 +42,7 @@ export default function CodeEditor({ value, levelId, onChange }: CodeEditorProps
         onChange={(nextValue) => onChange(nextValue ?? "")}
         loading={
           <div className="flex h-full items-center justify-center bg-[#0d1110] font-mono text-xs uppercase tracking-[0.24em] text-[#d8b574]/50">
-            Loading editor
+            Cargando editor
           </div>
         }
         options={{

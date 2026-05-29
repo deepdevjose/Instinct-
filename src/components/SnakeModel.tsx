@@ -1,37 +1,101 @@
-import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
-import {
-  Box3,
-  Color,
-  Group,
-  Material,
-  Mesh,
-  MeshStandardMaterial,
-  Object3D,
-  Vector3
-} from "three";
+import { useRef, type RefObject } from "react";
+import * as THREE from "three";
 import type { SnakeEntity, SnakeVisualState } from "../game/entities";
-
-const snakeModelUrl = new URL("../models/snake.glb", import.meta.url).href;
 
 interface SnakeModelProps {
   snake: SnakeEntity;
   pulse: number;
 }
 
-export default function SnakeModel({ snake, pulse }: SnakeModelProps) {
-  const groupRef = useRef<Group>(null);
-  const gltf = useGLTF(snakeModelUrl);
-  const visualState = snake.state;
-  const model = useMemo(() => prepareModel(gltf.scene, 1.95), [gltf.scene]);
+const LIFE_STAGE_SCALE: Record<string, number> = {
+  egg: 0,
+  hatchling: 0.7,
+  juvenile: 0.84,
+  adult: 0.98,
+  elder: 1.02,
+  dead: 0.92
+};
 
-  useEffect(() => {
-    applySnakeMaterialState(model.object, visualState);
-  }, [model.object, visualState]);
+const SEGMENTS = [
+  { position: [0, 0.19, 0.78], rotation: 0, scale: [0.32, 0.22, 0.46], kind: "head" },
+  { position: [0.02, 0.17, 0.34], rotation: -0.08, scale: [0.27, 0.18, 0.5], kind: "body" },
+  { position: [-0.08, 0.16, -0.08], rotation: -0.28, scale: [0.28, 0.18, 0.54], kind: "body" },
+  { position: [-0.34, 0.15, -0.42], rotation: -0.72, scale: [0.29, 0.18, 0.56], kind: "body" },
+  { position: [-0.74, 0.14, -0.5], rotation: -1.22, scale: [0.27, 0.17, 0.54], kind: "body" },
+  { position: [-1.1, 0.13, -0.34], rotation: -1.88, scale: [0.24, 0.16, 0.48], kind: "body" },
+  { position: [-1.3, 0.11, -0.02], rotation: -2.48, scale: [0.18, 0.13, 0.4], kind: "tail" }
+] as const;
+
+function getPalette(state: SnakeVisualState) {
+  if (state === "dead") {
+    return {
+      base: "#62584d",
+      dark: "#3d352f",
+      gold: "#8b7a5a",
+      belly: "#b9ac90",
+      glow: "#ff5a5a"
+    };
+  }
+
+  if (state === "hiding") {
+    return {
+      base: "#6d7442",
+      dark: "#3f4a2d",
+      gold: "#9ca35d",
+      belly: "#d7d3a8",
+      glow: "#8dff7a"
+    };
+  }
+
+  if (state === "shedding") {
+    return {
+      base: "#c9d9a5",
+      dark: "#8ca177",
+      gold: "#eef2c8",
+      belly: "#f5f1dd",
+      glow: "#d7ffc1"
+    };
+  }
+
+  if (state === "attacking") {
+    return {
+      base: "#b98645",
+      dark: "#5a3b25",
+      gold: "#f0ce76",
+      belly: "#fff0be",
+      glow: "#8dff7a"
+    };
+  }
+
+  return {
+    base: state === "newborn" ? "#b9914e" : "#a97a3f",
+    dark: "#60402b",
+    gold: "#e0b967",
+    belly: "#fff0c4",
+    glow: state === "newborn" ? "#ffd27a" : "#8dff7a"
+  };
+}
+
+export default function SnakeModel(props: SnakeModelProps) {
+  if (props.snake.state === "egg") {
+    return null;
+  }
+
+  return <VisibleSnakeModel {...props} />;
+}
+
+function VisibleSnakeModel({ snake, pulse }: SnakeModelProps) {
+  const groupRef = useRef<THREE.Group>(null);
+  const bodyRef = useRef<THREE.Group>(null);
+  const tongueRef = useRef<THREE.Group>(null);
+  const hatRef = useRef<THREE.Group>(null);
+
+  const visualState = snake.state;
+  const baseScale = LIFE_STAGE_SCALE[snake.lifeStage] ?? 1;
 
   useFrame(({ clock }) => {
-    if (!groupRef.current) {
+    if (!groupRef.current || !bodyRef.current) {
       return;
     }
 
@@ -41,96 +105,230 @@ export default function SnakeModel({ snake, pulse }: SnakeModelProps) {
     const isDead = visualState === "dead";
     const isHiding = visualState === "hiding";
     const isNewborn = visualState === "newborn";
-    const speed = isMoving ? 6.6 : isNewborn ? 4.8 : 1.8;
-    const bodyWave = Math.sin(time * speed + pulse) * (isMoving ? 0.16 : 0.045);
-    const attackLunge = isAttacking ? Math.sin(time * 12) * 0.18 : 0;
-    const hideDrop = isHiding ? -0.05 : 0;
-    const hatchRise = isNewborn ? 0.14 + Math.sin(time * 4.8) * 0.026 : 0;
+    const speed = isMoving ? 7 : isNewborn ? 4.8 : 2.1;
+    const wave = Math.sin(time * speed + pulse) * (isMoving ? 0.1 : 0.035);
+    const lunge = isAttacking ? Math.sin(time * 12) * 0.2 : 0;
+    const rise = isNewborn ? 0.12 + Math.sin(time * 4.6) * 0.03 : 0;
 
     groupRef.current.position.set(
-      snake.position[0] + Math.cos(snake.rotation) * attackLunge,
-      snake.position[1] + 0.18 + hideDrop + hatchRise,
-      snake.position[2] + Math.sin(snake.rotation) * attackLunge
+      snake.position[0] + Math.cos(snake.rotation) * lunge,
+      snake.position[1] + 0.08 + rise + (isHiding ? -0.03 : 0),
+      snake.position[2] + Math.sin(snake.rotation) * lunge
     );
+
     groupRef.current.rotation.set(
-      isDead ? 0.12 : 0,
-      -snake.rotation + bodyWave * 0.22,
-      isDead ? -0.78 : bodyWave * 0.12
+      isDead ? 0.16 : 0,
+      -snake.rotation + wave,
+      isDead ? -0.82 : wave * 0.32
     );
 
     const stateScale =
-      visualState === "newborn"
-        ? 0.84 + Math.sin(time * 5.2) * 0.015
-        : visualState === "old"
-          ? 0.94
-          : visualState === "attacking"
-            ? 1.05
-            : 1;
-    groupRef.current.scale.setScalar(stateScale);
+      isNewborn ? 0.9 + Math.sin(time * 5) * 0.018 :
+      isAttacking ? 1.06 :
+      visualState === "old" ? 0.96 :
+      1;
+
+    groupRef.current.scale.setScalar(baseScale * stateScale);
+    bodyRef.current.rotation.y = Math.sin(time * speed * 0.42 + pulse) * (isMoving ? 0.12 : 0.04);
+
+    if (tongueRef.current) {
+      tongueRef.current.visible = !isDead && !isHiding && Math.sin(time * 17) > 0.15;
+      tongueRef.current.scale.z = Math.sin(time * 17) > 0.7 ? 1.35 : 1;
+    }
+
+    if (hatRef.current) {
+      hatRef.current.rotation.z = isDead ? -0.65 : isAttacking ? 0.18 : Math.sin(time * 1.5) * 0.025;
+    }
   });
 
-  if (visualState === "egg") {
-    return null;
-  }
+  const palette = getPalette(visualState);
+  const opacity = visualState === "hiding" ? 0.44 : visualState === "dead" ? 0.72 : 1;
+  const transparent = visualState === "hiding" || visualState === "dead";
 
   return (
     <group ref={groupRef}>
-      <primitive object={model.object} scale={model.scale} />
-      <SnakeHat visualState={visualState} />
-      <SnakeStateAura visualState={visualState} />
-      <NewbornReveal visualState={visualState} />
+      <group ref={bodyRef}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-0.45, 0.035, -0.1]} scale={[1.42, 0.58, 1]}>
+          <circleGeometry args={[1, 18]} />
+          <meshBasicMaterial color="#050805" transparent opacity={0.24} depthWrite={false} />
+        </mesh>
+
+        {SEGMENTS.map((segment, index) => (
+          <BlockSegment
+            key={`snake-block-${index}`}
+            index={index}
+            position={segment.position}
+            rotation={segment.rotation}
+            scale={segment.scale}
+            kind={segment.kind}
+            palette={palette}
+            transparent={transparent}
+            opacity={opacity}
+          />
+        ))}
+
+        <Tongue tongueRef={tongueRef} />
+        <TinyHat hatRef={hatRef} />
+      </group>
+
+      <SnakeStateAura visualState={visualState} color={palette.glow} />
+      <NewbornReveal visualState={visualState} color={palette.glow} />
     </group>
   );
 }
 
-function SnakeHat({ visualState }: { visualState: SnakeVisualState }) {
-  const tilt = visualState === "dead" ? -0.55 : visualState === "attacking" ? 0.22 : 0;
+function BlockSegment({
+  index,
+  position,
+  rotation,
+  scale,
+  kind,
+  palette,
+  transparent,
+  opacity
+}: {
+  index: number;
+  position: readonly [number, number, number];
+  rotation: number;
+  scale: readonly [number, number, number];
+  kind: "head" | "body" | "tail";
+  palette: ReturnType<typeof getPalette>;
+  transparent: boolean;
+  opacity: number;
+}) {
+  const isHead = kind === "head";
+  const isTail = kind === "tail";
 
   return (
-    <group position={[0.38, 0.56, 0]} rotation={[0.02, 0, tilt]}>
-      <mesh castShadow receiveShadow scale={[0.42, 0.055, 0.32]}>
-        <cylinderGeometry args={[1, 1, 1, 8]} />
-        <meshStandardMaterial color="#20241f" roughness={0.85} flatShading />
+    <group position={position} rotation={[0, rotation, 0]} scale={scale}>
+      <mesh castShadow receiveShadow>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color={palette.base} roughness={0.9} flatShading transparent={transparent} opacity={opacity} />
       </mesh>
-      <mesh castShadow receiveShadow position={[0, 0.1, 0]} scale={[0.22, 0.18, 0.22]}>
-        <cylinderGeometry args={[1, 0.82, 1, 8]} />
-        <meshStandardMaterial color="#34382f" roughness={0.88} flatShading />
+
+      <mesh position={[0, -0.37, 0.16]} scale={[0.9, 0.22, 0.72]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color={palette.belly} roughness={0.86} flatShading transparent={transparent} opacity={opacity} />
       </mesh>
-      <mesh position={[0, 0.19, 0]} scale={[0.24, 0.018, 0.24]}>
-        <cylinderGeometry args={[1, 1, 1, 8]} />
-        <meshStandardMaterial color="#8dff7a" emissive="#24431c" flatShading />
+
+      <Patch x={-0.26} z={-0.18} color={index % 2 === 0 ? palette.dark : palette.gold} opacity={opacity} transparent={transparent} />
+      <Patch x={0.18} z={0.12} color={index % 2 === 0 ? palette.gold : palette.dark} opacity={opacity} transparent={transparent} />
+      {!isTail ? (
+        <Patch x={0.34} z={-0.26} color={palette.dark} opacity={opacity * 0.9} transparent={transparent} small />
+      ) : null}
+
+      {isHead ? (
+        <>
+          <mesh castShadow receiveShadow position={[0, -0.02, 0.56]} scale={[0.82, 0.76, 0.22]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color={palette.base} roughness={0.88} flatShading transparent={transparent} opacity={opacity} />
+          </mesh>
+          <mesh position={[0, -0.37, 0.68]} scale={[0.62, 0.16, 0.12]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color={palette.belly} roughness={0.86} flatShading transparent={transparent} opacity={opacity} />
+          </mesh>
+          <mesh position={[-0.22, 0.08, 0.69]} scale={[0.08, 0.11, 0.045]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#17100b" roughness={0.5} flatShading />
+          </mesh>
+          <mesh position={[0.22, 0.08, 0.69]} scale={[0.08, 0.11, 0.045]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#17100b" roughness={0.5} flatShading />
+          </mesh>
+          <mesh position={[-0.19, 0.12, 0.72]} scale={[0.025, 0.025, 0.02]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshBasicMaterial color="#fff4d6" />
+          </mesh>
+          <mesh position={[0.25, 0.12, 0.72]} scale={[0.025, 0.025, 0.02]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshBasicMaterial color="#fff4d6" />
+          </mesh>
+        </>
+      ) : null}
+    </group>
+  );
+}
+
+function Patch({
+  x,
+  z,
+  color,
+  opacity,
+  transparent,
+  small = false
+}: {
+  x: number;
+  z: number;
+  color: string;
+  opacity: number;
+  transparent: boolean;
+  small?: boolean;
+}) {
+  return (
+    <mesh position={[x, 0.515, z]} scale={small ? [0.26, 0.035, 0.22] : [0.34, 0.035, 0.28]}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={color} roughness={0.82} flatShading transparent={transparent} opacity={opacity} />
+    </mesh>
+  );
+}
+
+function Tongue({ tongueRef }: { tongueRef: RefObject<THREE.Group> }) {
+  return (
+    <group ref={tongueRef} position={[0, 0.18, 1.1]}>
+      <mesh position={[0, -0.03, 0.08]} scale={[0.025, 0.012, 0.22]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#cc2c26" roughness={0.72} flatShading />
+      </mesh>
+      <mesh position={[-0.035, -0.03, 0.28]} rotation={[0, 0.22, 0]} scale={[0.018, 0.01, 0.09]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#cc2c26" roughness={0.72} flatShading />
+      </mesh>
+      <mesh position={[0.035, -0.03, 0.28]} rotation={[0, -0.22, 0]} scale={[0.018, 0.01, 0.09]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#cc2c26" roughness={0.72} flatShading />
       </mesh>
     </group>
   );
 }
 
-function SnakeStateAura({ visualState }: { visualState: SnakeVisualState }) {
+function TinyHat({ hatRef }: { hatRef: RefObject<THREE.Group> }) {
+  return (
+    <group ref={hatRef} position={[0, 0.45, 0.76]} rotation={[0.02, 0, 0]}>
+      <mesh castShadow receiveShadow scale={[0.34, 0.04, 0.24]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#3b2618" roughness={0.9} flatShading />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, 0.075, 0]} scale={[0.19, 0.13, 0.18]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#5a371f" roughness={0.9} flatShading />
+      </mesh>
+      <mesh position={[0, 0.025, 0]} scale={[0.21, 0.02, 0.19]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#8dff7a" emissive="#203d18" roughness={0.72} flatShading />
+      </mesh>
+    </group>
+  );
+}
+
+function SnakeStateAura({ visualState, color }: { visualState: SnakeVisualState; color: string }) {
   if (!["newborn", "attacking", "shedding", "protecting_children", "dead"].includes(visualState)) {
     return null;
   }
 
-  const colorByState: Record<string, string> = {
-    newborn: "#ffd27a",
-    attacking: "#8dff7a",
-    shedding: "#d7ffc1",
-    protecting_children: "#7bd3ff",
-    dead: "#ff5a5a"
-  };
-
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.045, 0]}>
-      <ringGeometry args={[0.88, 0.96, 18]} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-0.45, 0.045, -0.02]}>
+      <ringGeometry args={[1.18, 1.28, 22]} />
       <meshBasicMaterial
-        color={colorByState[visualState]}
+        color={visualState === "dead" ? "#ff5a5a" : color}
         transparent
-        opacity={visualState === "dead" ? 0.28 : visualState === "newborn" ? 0.52 : 0.46}
+        opacity={visualState === "dead" ? 0.26 : 0.42}
       />
     </mesh>
   );
 }
 
-function NewbornReveal({ visualState }: { visualState: SnakeVisualState }) {
-  const groupRef = useRef<Group>(null);
+function NewbornReveal({ visualState, color }: { visualState: SnakeVisualState; color: string }) {
+  const groupRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock }) => {
     if (!groupRef.current) {
@@ -146,132 +344,22 @@ function NewbornReveal({ visualState }: { visualState: SnakeVisualState }) {
   }
 
   return (
-    <group ref={groupRef} rotation={[0, 0.35, 0]}>
-      <pointLight color="#8dff7a" intensity={1.4} distance={3.2} position={[0.12, 0.55, 0.04]} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.08, 0.08, 0]}>
-        <ringGeometry args={[0.72, 0.84, 28]} />
-        <meshBasicMaterial color="#ffd27a" transparent opacity={0.48} depthWrite={false} />
+    <group ref={groupRef} position={[0, 0.02, 0.1]}>
+      <pointLight color={color} intensity={1.2} distance={3.2} position={[0, 0.72, 0.52]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-0.35, 0.08, 0]}>
+        <ringGeometry args={[0.9, 1.02, 24]} />
+        <meshBasicMaterial color="#ffd27a" transparent opacity={0.42} depthWrite={false} />
       </mesh>
-
-      <mesh
-        castShadow
-        receiveShadow
-        position={[0.02, 0.28, 0.02]}
-        rotation={[Math.PI / 2, 0.02, 0.18]}
-        scale={[0.52, 0.38, 0.52]}
-      >
-        <torusGeometry args={[1, 0.18, 8, 24]} />
-        <meshStandardMaterial color="#5ca955" emissive="#12310f" roughness={0.84} flatShading />
-      </mesh>
-      <mesh
-        castShadow
-        receiveShadow
-        position={[0.36, 0.46, 0.06]}
-        rotation={[0.12, 0, -0.22]}
-        scale={[0.42, 0.16, 0.2]}
-      >
-        <capsuleGeometry args={[0.28, 0.58, 4, 8]} />
-        <meshStandardMaterial color="#6ccf63" emissive="#143c10" roughness={0.82} flatShading />
-      </mesh>
-      <mesh castShadow receiveShadow position={[0.74, 0.52, 0.08]} scale={[0.22, 0.16, 0.18]}>
-        <sphereGeometry args={[1, 8, 6]} />
-        <meshStandardMaterial color="#dfff9b" emissive="#1d4c12" roughness={0.82} flatShading />
-      </mesh>
-      <mesh position={[0.82, 0.56, 0.02]} rotation={[0, 0, -0.6]} scale={[0.16, 0.035, 0.035]}>
-        <coneGeometry args={[1, 1, 4]} />
-        <meshStandardMaterial color="#8dff7a" emissive="#1d4c12" roughness={0.7} flatShading />
-      </mesh>
-      <mesh position={[0.82, 0.5, 0.12]} rotation={[0, 0, 0.6]} scale={[0.16, 0.035, 0.035]}>
-        <coneGeometry args={[1, 1, 4]} />
-        <meshStandardMaterial color="#8dff7a" emissive="#1d4c12" roughness={0.7} flatShading />
-      </mesh>
+      {[-0.42, -0.16, 0.16, 0.42].map((x, index) => (
+        <mesh
+          key={`birth-spark-${index}`}
+          position={[x, 0.48 + index * 0.035, 0.38 - index * 0.08]}
+          scale={[0.045, 0.045, 0.045]}
+        >
+          <octahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial color={color} emissive="#315d21" emissiveIntensity={0.75} flatShading />
+        </mesh>
+      ))}
     </group>
   );
 }
-
-function prepareModel(scene: Object3D, targetSize: number) {
-  const object = scene.clone(true);
-
-  object.traverse((child) => {
-    if (!(child as Mesh).isMesh) {
-      return;
-    }
-
-    const mesh = child as Mesh;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    mesh.material = cloneMaterials(mesh.material);
-
-    getMaterials(mesh.material).forEach((material) => {
-      if (material instanceof MeshStandardMaterial) {
-        material.userData.baseColor = material.color.clone();
-        material.flatShading = true;
-        material.roughness = 0.92;
-        material.metalness = 0.02;
-        material.needsUpdate = true;
-      }
-    });
-  });
-
-  const bounds = new Box3().setFromObject(object);
-  const size = new Vector3();
-  const center = new Vector3();
-  bounds.getSize(size);
-  bounds.getCenter(center);
-  object.position.sub(center);
-
-  const maxDimension = Math.max(size.x, size.y, size.z, 0.001);
-
-  return {
-    object,
-    scale: targetSize / maxDimension
-  };
-}
-
-function applySnakeMaterialState(object: Object3D, visualState: SnakeVisualState) {
-  const tint = new Color(
-    visualState === "dead"
-      ? "#5b5051"
-      : visualState === "hiding"
-        ? "#40573c"
-        : visualState === "old"
-          ? "#9ba17b"
-          : visualState === "shedding"
-            ? "#d6ffc4"
-            : visualState === "attacking"
-              ? "#8dff7a"
-              : "#71c663"
-  );
-
-  object.traverse((child) => {
-    if (!(child as Mesh).isMesh) {
-      return;
-    }
-
-    const mesh = child as Mesh;
-    getMaterials(mesh.material).forEach((material) => {
-      if (!(material instanceof MeshStandardMaterial)) {
-        return;
-      }
-
-      const baseColor = material.userData.baseColor as Color | undefined;
-      material.color.copy(baseColor ?? new Color("#71c663")).lerp(tint, 0.42);
-      material.transparent = visualState === "hiding" || visualState === "dead";
-      material.opacity =
-        visualState === "hiding" ? 0.38 : visualState === "dead" ? 0.72 : 1;
-      material.emissive.set(visualState === "attacking" ? "#183b12" : "#000000");
-      material.needsUpdate = true;
-    });
-  });
-}
-
-function cloneMaterials(material: Mesh["material"]) {
-  const cloned = getMaterials(material).map((entry) => entry.clone());
-  return Array.isArray(material) ? cloned : cloned[0];
-}
-
-function getMaterials(material: Mesh["material"]): Material[] {
-  return Array.isArray(material) ? material : [material];
-}
-
-useGLTF.preload(snakeModelUrl);

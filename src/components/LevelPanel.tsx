@@ -49,7 +49,7 @@ export default function LevelPanel() {
           </div>
           <div className="rounded-md border border-venom/25 bg-venom/10 px-3 py-2 text-right">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#d8b574]/52">
-              Level {String(level.id).padStart(2, "0")} / 45
+              Nivel {String(level.id).padStart(2, "0")} / 45
             </p>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-venom">
               {formatActLabel(level.act)}
@@ -60,35 +60,35 @@ export default function LevelPanel() {
         <p className="text-sm leading-6 text-bone/66">{level.narrative}</p>
 
         <div className="grid gap-2 sm:grid-cols-2">
-          <InfoBlock icon={Crosshair} label="Objective" value={level.objective} />
+          <InfoBlock icon={Crosshair} label="Objetivo" value={level.objective} />
           <InfoBlock
             icon={Sparkles}
-            label="Python"
+            label="Teoría"
             value={level.pythonConcept}
           />
         </div>
       </header>
 
       <section className="grid grid-cols-3 gap-2">
-        <Stat icon={Activity} label="Health" value={snake.health} />
-        <Stat icon={Shield} label="Energy" value={snake.energy} />
-        <Stat icon={Skull} label="Venom" value={snake.venom} />
+        <Stat icon={Activity} label="Salud" value={snake.health} />
+        <Stat icon={Shield} label="Energía" value={snake.energy} />
+        <Stat icon={Skull} label="Veneno" value={snake.venom} />
       </section>
 
       <section className="flex min-h-[260px] flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
           <div className="font-mono text-xs uppercase tracking-[0.22em] text-[#d8b574]/52">
-            Code
+            Código
           </div>
           <div className="font-mono text-xs text-bone/42">
-            attempts {attempts} / {level.maxAttempts}
+            intentos {attempts} / {level.maxAttempts}
           </div>
         </div>
         <div className="min-h-[240px] flex-1">
           <Suspense
             fallback={
               <div className="flex h-full min-h-[240px] items-center justify-center rounded-md border border-[#6e5630]/32 bg-[#0d1110] font-mono text-xs uppercase tracking-[0.24em] text-[#d8b574]/50">
-                Loading editor
+                Cargando editor
               </div>
             }
           >
@@ -108,14 +108,14 @@ export default function LevelPanel() {
           }`}
         >
           <Play className="h-4 w-4" />
-          {runStatus === "running" ? "Running" : "Run"}
+          {runStatus === "running" ? "Ejecutando" : "Ejecutar"}
         </button>
         <button
           type="button"
           onClick={resetToCheckpoint}
           className="hud-control flex h-11 w-11 items-center justify-center rounded-md text-bone/70 transition hover:text-bone"
-          aria-label="Reset checkpoint"
-          title="Reset checkpoint"
+          aria-label="Reiniciar checkpoint"
+          title="Reiniciar checkpoint"
         >
           <RotateCcw className="h-4 w-4" />
         </button>

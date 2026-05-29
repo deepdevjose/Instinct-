@@ -17,10 +17,10 @@ export default function RoadmapProgress() {
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#d8b574]/74">
             <Map className="h-4 w-4 text-venom" />
-            Python Roadmap
+            Ruta de Python
           </div>
           <p className="mt-1 text-xs text-bone/48">
-            Print, variables, constants, functions, loops, control flow, data and OOP.
+            print(), variables, constantes, funciones, ciclos, control de flujo, datos y objetos.
           </p>
         </div>
         <span className="rounded-md border border-venom/[0.14] bg-venom/10 px-2.5 py-1 font-mono text-xs text-venom">
@@ -44,7 +44,7 @@ export default function RoadmapProgress() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f3d491]">
                 {formatActLabel(act.name)}
               </span>
-              <span className="text-[11px] text-bone/38">{act.levels.length} nodes</span>
+              <span className="text-[11px] text-bone/38">{act.levels.length} nodos</span>
             </div>
 
             <div className="relative space-y-1.5 pl-3 before:absolute before:left-[9px] before:top-3 before:h-[calc(100%-1.5rem)] before:w-px before:bg-[#d8b574]/12">
@@ -83,7 +83,7 @@ export default function RoadmapProgress() {
                         <span className="truncate text-sm font-semibold">{level.title}</span>
                         {level.isPlayable ? (
                           <span className="hidden rounded-full bg-venom/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-venom sm:inline">
-                            playable
+                            jugable
                           </span>
                         ) : null}
                       </span>

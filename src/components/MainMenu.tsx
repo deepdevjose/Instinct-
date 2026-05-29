@@ -20,8 +20,8 @@ import {
   X
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import avatarUrl from "../assets/avatar.png";
-import iconUrl from "../assets/icon.png";
+import avatarUrl from "../assets/avatar.webp";
+import iconUrl from "../assets/icon.webp";
 import { levels } from "../game/levels";
 import { useGameStore } from "../store/gameStore";
 import RoadmapProgress from "./RoadmapProgress";
@@ -39,10 +39,10 @@ interface MainMenuProps {
 }
 
 const tips = [
-  "Tip: print() is the first way code speaks.",
-  "Survival Tip: failing 3 times sends you back one level.",
-  "Instinct Tip: variables let the body remember danger.",
-  "Field Note: hiding costs energy, but buys time."
+  "Tip: print() es la primera forma en la que el código habla.",
+  "Supervivencia: 3 señales fallidas te regresan un nivel.",
+  "Tip de instinto: las variables ayudan al cuerpo a recordar peligro.",
+  "Nota de campo: esconderte cuesta energía, pero te compra tiempo."
 ];
 
 export default function MainMenu({ onStart }: MainMenuProps) {
@@ -91,7 +91,7 @@ export default function MainMenu({ onStart }: MainMenuProps) {
 
     if (
       hasProgress &&
-      !window.confirm("Starting a new journey will overwrite current progress.")
+      !window.confirm("Empezar una nueva partida borrará el progreso actual.")
     ) {
       return;
     }
@@ -142,14 +142,14 @@ export default function MainMenu({ onStart }: MainMenuProps) {
                       <p className="font-mono text-sm font-semibold uppercase tracking-[0.24em] text-venom">
                         HATCHLING_42
                       </p>
-                      <p className="mt-1 text-sm text-bone/58">Apprentice Survivor</p>
+                      <p className="mt-1 text-sm text-bone/58">Aprendiz de supervivencia</p>
                     </div>
                   </div>
                   <div className="mt-5 space-y-3 text-sm">
-                    <ProfileRow label="Progress" value={`${progress}%`} />
-                    <ProfileRow label="Current Level" value={currentLevel.title} />
-                    <ProfileRow label="Attempts" value={String(totalAttempts)} />
-                    <ProfileRow label="Play Time" value="00h 00m" />
+                    <ProfileRow label="Progreso" value={`${progress}%`} />
+                    <ProfileRow label="Nivel actual" value={currentLevel.title} />
+                    <ProfileRow label="Intentos" value={String(totalAttempts)} />
+                    <ProfileRow label="Tiempo" value="00h 00m" />
                   </div>
                 </motion.div>
               </div>
@@ -180,9 +180,9 @@ export default function MainMenu({ onStart }: MainMenuProps) {
             </div>
 
             <div className="pointer-events-none absolute bottom-5 left-1/2 hidden -translate-x-1/2 items-center justify-center gap-4 font-mono text-xs uppercase tracking-[0.18em] text-bone/46 lg:flex">
-              <span>Press</span>
+              <span>Presiona</span>
               <span className="text-venom">Enter</span>
-              <span>to Start</span>
+              <span>para empezar</span>
             </div>
 
             <SurvivalTip tip={activeTip} />
@@ -226,7 +226,7 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         transition={{ duration: 0.65, ease: "easeOut", delay: 0.2 }}
         className="mt-4 text-lg text-bone/72"
       >
-        Survival Compiler
+        Código de Supervivencia
       </motion.p>
       <motion.div
         initial={{ opacity: 0 }}
@@ -234,7 +234,7 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.35 }}
         className="mt-12 rounded-lg border border-[#6e5630]/36 bg-black/30 px-5 py-3 font-mono text-xs uppercase tracking-[0.22em] text-bone/72 backdrop-blur-xl"
       >
-        Press Enter / Click to Start
+        Presiona Enter / clic para empezar
       </motion.div>
     </motion.button>
   );
@@ -257,13 +257,13 @@ function MenuHeader({
           <p className="font-mono text-3xl font-semibold uppercase tracking-[0.28em] text-venom drop-shadow-[0_0_16px_rgba(141,255,122,0.32)] sm:text-5xl">
             INSTINCT()
           </p>
-          <p className="mt-2 text-base text-bone/66 sm:text-lg">Survival Compiler</p>
+          <p className="mt-2 text-base text-bone/66 sm:text-lg">Código de Supervivencia</p>
         </div>
       </div>
       <div className="hidden gap-3 sm:flex">
-        <IconButton label="Settings" icon={Settings} onClick={() => onOpenSection("settings")} />
-        <IconButton label="Help" icon={HelpCircle} onClick={() => onOpenSection("help")} />
-        <IconButton label="Credits" icon={Star} onClick={() => onOpenSection("credits")} />
+        <IconButton label="Configuración" icon={Settings} onClick={() => onOpenSection("settings")} />
+        <IconButton label="Ayuda" icon={HelpCircle} onClick={() => onOpenSection("help")} />
+        <IconButton label="Créditos" icon={Star} onClick={() => onOpenSection("credits")} />
       </div>
     </header>
   );
@@ -304,45 +304,45 @@ function MainOptions({
 }) {
   const options = [
     {
-      label: "Continue",
-      description: `Resume — Level ${String(currentLevel.id).padStart(2, "0")}: ${currentLevel.title}`,
+      label: "Continuar",
+      description: `Reanudar — Nivel ${String(currentLevel.id).padStart(2, "0")}: ${currentLevel.title}`,
       icon: Play,
       action: onContinue,
       primary: true
     },
     {
-      label: "New Game",
-      description: "Begin a new survival",
+      label: "Nueva partida",
+      description: "Empezar una nueva supervivencia",
       icon: Leaf,
       action: onNewGame
     },
     {
-      label: "Load Checkpoint",
-      description: "Pick up where you left off",
+      label: "Cargar checkpoint",
+      description: "Volver a tu último avance",
       icon: Download,
       action: () => onOpenSection("checkpoints")
     },
     {
-      label: "Roadmap",
-      description: "See the whole bloodline path",
+      label: "Ruta de Python",
+      description: "Ver el camino completo de aprendizaje",
       icon: Map,
       action: () => onOpenSection("roadmap")
     },
     {
-      label: "Help",
-      description: "Learn the basics",
+      label: "Ayuda",
+      description: "Aprender controles y reglas",
       icon: HelpCircle,
       action: () => onOpenSection("help")
     },
     {
-      label: "Settings",
-      description: "Adjust your experience",
+      label: "Configuración",
+      description: "Ajustar la experiencia",
       icon: Settings,
       action: () => onOpenSection("settings")
     },
     {
-      label: "Credits",
-      description: "Meet the creators",
+      label: "Créditos",
+      description: "Ver creación y tecnologías",
       icon: Star,
       action: () => onOpenSection("credits")
     }
@@ -374,7 +374,7 @@ function MainOptions({
         </button>
       ))}
       <p className="pt-2 text-right font-mono text-[11px] uppercase tracking-[0.18em] text-bone/34">
-        Version 0.1 Alpha
+        Versión 0.1 Alpha
       </p>
     </div>
   );
@@ -414,10 +414,10 @@ function SectionPanel({
           onClick={onBack}
           className="text-sm font-semibold text-[#d8b574] transition hover:text-venom"
         >
-          Back
+          Volver
         </button>
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-[#d8b574]/52">
-          {section}
+          {getSectionLabel(section)}
         </p>
       </div>
 
@@ -464,7 +464,7 @@ function CheckpointList({
           <span>
             <span className="block text-sm font-semibold text-bone">{level.act}</span>
             <span className="mt-0.5 block text-sm text-bone/56">
-              Level {String(level.id).padStart(2, "0")} · {level.title}
+              Nivel {String(level.id).padStart(2, "0")} · {level.title}
             </span>
           </span>
           <ChevronRight className="h-4 w-4 text-[#d8b574]" />
@@ -472,6 +472,19 @@ function CheckpointList({
       ))}
     </div>
   );
+}
+
+function getSectionLabel(section: MenuSection) {
+  const labels: Record<MenuSection, string> = {
+    main: "Menú",
+    checkpoints: "Checkpoints guardados",
+    roadmap: "Ruta de Python",
+    help: "Ayuda",
+    settings: "Configuración",
+    credits: "Créditos"
+  };
+
+  return labels[section];
 }
 
 function MenuRoadmap() {
@@ -486,31 +499,31 @@ function HelpPanel() {
   return (
     <div className="thin-scrollbar max-h-[520px] space-y-4 overflow-y-auto pr-1">
       <HelpSection
-        title="Gameplay"
+        title="Juego"
         items={[
-          "Open the floating editor to write code.",
-          "Run code to trigger survival actions.",
-          "Checkpoints restore the level after a failed signal.",
-          "Failing more than 3 times sends you back one level."
+          "Abre el editor flotante para escribir código.",
+          "Ejecuta el código para activar acciones de supervivencia.",
+          "Los checkpoints restauran el nivel después de una señal fallida.",
+          "Si fallas más de 3 veces, regresas un nivel."
         ]}
       />
       <HelpSection
-        title="Python Basics"
+        title="Bases de Python"
         items={["print()", "variables", "if / else", "loops", "functions"]}
       />
       <HelpSection
-        title="UI Guide"
+        title="Guía de UI"
         items={[
-          "Health is survival condition.",
-          "Energy powers movement and hiding.",
-          "Venom powers attacks.",
-          "Roadmap shows the full learning path."
+          "Salud muestra qué tan cerca estás de morir.",
+          "Energía alimenta movimiento y escondite.",
+          "Veneno alimenta ataques.",
+          "La ruta muestra todo el camino de aprendizaje."
         ]}
       />
       <HelpSection
-        title="Story"
+        title="Historia"
         items={[
-          "You are a serpent learning to survive, evolve, protect young, pass instinct forward, and die naturally with a legacy."
+          "Eres una serpiente que aprende a sobrevivir, evolucionar, proteger crías, heredar instinto y cerrar su ciclo con legado."
         ]}
       />
     </div>
@@ -539,11 +552,11 @@ function SettingsPanel() {
       <SettingsGroup
         icon={SlidersHorizontal}
         title="Visual"
-        controls={["Brightness", "Shadows", "Glow", "Fog"]}
+        controls={["Brillo", "Sombras", "Glow", "Niebla"]}
       />
-      <SettingsGroup icon={Volume2} title="Audio" controls={["Master", "Music", "Effects", "UI Sounds"]} />
-      <SettingsGroup icon={Gamepad2} title="Gameplay" controls={["Hints", "Autosave", "Code Assistance"]} />
-      <SettingsGroup icon={Clock} title="Controls" controls={["Toggle Editor", "Run Code", "Reset Level"]} />
+      <SettingsGroup icon={Volume2} title="Audio" controls={["General", "Música", "Efectos", "Sonidos UI"]} />
+      <SettingsGroup icon={Gamepad2} title="Juego" controls={["Pistas", "Autoguardado", "Ayuda de código"]} />
+      <SettingsGroup icon={Clock} title="Controles" controls={["Abrir editor", "Ejecutar código", "Reiniciar nivel"]} />
     </div>
   );
 }
@@ -596,22 +609,22 @@ function CreditsPanel() {
           />
           <div>
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-venom">
-              Game Developer
+              Desarrollador del juego
             </p>
             <p className="mt-1 text-2xl font-semibold text-bone">INSTINCT()</p>
           </div>
         </div>
         <p className="mt-4 text-sm leading-6 text-bone/62">
-          Survival compiler prototype, game design, programming, UI direction and
-          learning system.
+          Prototipo de compilador de supervivencia, diseño de juego, programación,
+          dirección de UI y sistema de aprendizaje.
         </p>
       </section>
       {[
-        "Design & Concept",
-        "Game System",
-        "Programming",
-        "3D Art",
-        "Built with React, Three.js, React Three Fiber, Monaco, Zustand"
+        "Diseño y concepto",
+        "Sistema de juego",
+        "Programación",
+        "Arte 3D",
+        "Hecho con React, Three.js, React Three Fiber, Monaco y Zustand"
       ].map((line) => (
         <div
           key={line}

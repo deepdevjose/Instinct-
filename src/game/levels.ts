@@ -19,13 +19,18 @@ function checkpoint(
 const playableLevels: Level[] = [
   {
     id: 1,
-    title: "The Egg",
-    act: "ACT I - Birth",
+    title: "El Cascarón",
+    act: "ACTO I - Nacimiento",
     narrative:
-      "Under cold soil, an egg waits for the first signal. Before movement, there is output.",
+      "Bajo la tierra fría, algo vivo espera una señal. Antes de moverse, la cría debe aprender a responder.",
     pythonConcept:
-      "print() sends text to the console. It is the first way code speaks back.",
-    objective: 'Print "Hello World" to wake the shell.',
+      "print() envía texto a la consola. Es la primera forma en la que tu código te contesta.",
+    studyNotes: [
+      'Usa print() para mostrar texto en la consola.',
+      'El texto debe ir entre comillas: "Hello World".',
+      "Python distingue mayúsculas, minúsculas y espacios cuando validamos una señal exacta."
+    ],
+    objective: 'Imprime "Hello World" para abrir el cascarón.',
     starterCode: '# Wake the shell\nprint("Hello World")',
     expectedPatterns: ['print("Hello World")', "print('Hello World')"],
     successCondition: "prints_hello_world",
@@ -37,23 +42,28 @@ const playableLevels: Level[] = [
     }),
     maxAttempts: MAX_ATTEMPTS,
     failureNarrative:
-      "The egg cools again. The signal was close, but not alive enough.",
+      "El cascarón se queda quieto. La señal estuvo cerca, pero todavía no despierta vida.",
     hints: {
-      first: 'The shell reacts to exact text: "Hello World".',
-      second: 'Use print() with the text inside quotes.',
-      third: 'Write exactly: print("Hello World")'
+      first: 'El cascarón reacciona al texto exacto: "Hello World".',
+      second: "Usa print() y coloca el texto dentro de comillas.",
+      third: 'Escribe exactamente: print("Hello World")'
     },
     isPlayable: true
   },
   {
     id: 2,
-    title: "First Breath",
-    act: "ACT I - Birth",
+    title: "Primer Aliento",
+    act: "ACTO I - Nacimiento",
     narrative:
-      "Air touches new scales. The hatchling needs a name for the first thing it feels.",
+      "El aire toca escamas nuevas. La cría necesita nombrar lo primero que siente.",
     pythonConcept:
-      "Strings are text values. Store them in variables when the same signal matters again.",
-    objective: 'Create a string called breath and print it.',
+      "Un string es texto. Puedes guardarlo en una variable para reutilizarlo después.",
+    studyNotes: [
+      "Una variable guarda un valor con un nombre.",
+      'Un string siempre va entre comillas, por ejemplo: "I am alive".',
+      "Después de guardar el valor, imprime la variable con print(breath)."
+    ],
+    objective: "Crea un string llamado breath e imprímelo.",
     starterCode: 'breath = ""\nprint(breath)',
     expectedPatterns: ['breath = "I am alive"', "print(breath)"],
     successCondition: "uses_string_and_print",
@@ -65,23 +75,28 @@ const playableLevels: Level[] = [
     }),
     maxAttempts: MAX_ATTEMPTS,
     failureNarrative:
-      "The hatchling opens its mouth, but the breath has no shape yet.",
+      "La cría abre la boca, pero el aliento todavía no tiene forma.",
     hints: {
-      first: "A string needs quotes around its text.",
-      second: 'Set breath to "I am alive" before printing it.',
-      third: 'Use:\nbreath = "I am alive"\nprint(breath)'
+      first: "Un string necesita comillas alrededor del texto.",
+      second: 'Asigna breath = "I am alive" antes de imprimirlo.',
+      third: 'Usa:\nbreath = "I am alive"\nprint(breath)'
     },
     isPlayable: true
   },
   {
     id: 3,
-    title: "First Movement",
-    act: "ACT I - Birth",
+    title: "Salir del Nido",
+    act: "ACTO I - Nacimiento",
     narrative:
-      "The nest is no longer safe. Survival begins as a sequence of small decisions.",
+      "El nido dejó de ser refugio. Sobrevivir empieza con una secuencia limpia de decisiones pequeñas.",
     pythonConcept:
-      "Programs run line by line. Order matters when each command changes the world.",
-    objective: "Move twice, then turn right toward the grass.",
+      "Los programas se ejecutan línea por línea. El orden importa porque cada comando cambia el mundo.",
+    studyNotes: [
+      "Python ejecuta la primera línea, luego la segunda, luego la tercera.",
+      "Si repites una función, la acción también se repite.",
+      "Para este nivel necesitas dos move_forward() y después turn_right()."
+    ],
+    objective: "Avanza dos veces y luego gira a la derecha hacia la cobertura.",
     starterCode: "# Move through the nest\nmove_forward()\n",
     expectedPatterns: ["move_forward()", "move_forward()", "turn_right()"],
     successCondition: "moves_in_sequence",
@@ -93,23 +108,28 @@ const playableLevels: Level[] = [
     }),
     maxAttempts: MAX_ATTEMPTS,
     failureNarrative:
-      "The hatchling twitches in place. Movement without sequence is only panic.",
+      "La cría se mueve sin avanzar. Movimiento sin secuencia es puro pánico.",
     hints: {
-      first: "The first two action lines should both move forward.",
-      second: "After two moves, add a right turn.",
-      third: "Use:\nmove_forward()\nmove_forward()\nturn_right()"
+      first: "Las dos primeras acciones deben avanzar.",
+      second: "Después de dos avances, agrega un giro a la derecha.",
+      third: "Usa:\nmove_forward()\nmove_forward()\nturn_right()"
     },
     isPlayable: true
   },
   {
     id: 4,
-    title: "Grass Instinct",
-    act: "ACT I - Birth",
+    title: "Entre la Maleza",
+    act: "ACTO I - Nacimiento",
     narrative:
-      "Tall grass breaks the line of sight. The hatchling learns to remember a useful number.",
+      "La maleza alta corta la mirada del cazador. La cría aprende a guardar un número antes de moverse.",
     pythonConcept:
-      "Variables store values. A name like steps can hold a number that guides later code.",
-    objective: "Store steps as a number, move twice, and print the stored value.",
+      "Las variables guardan valores. Un nombre como steps puede guardar un número para usarlo después.",
+    studyNotes: [
+      "Una asignación se escribe como nombre = valor.",
+      "Si steps vale 2, puedes usar ese número como memoria de tu plan.",
+      "El juego espera que guardes 2, avances dos veces e imprimas steps."
+    ],
+    objective: "Guarda steps como número, avanza dos veces e imprime ese valor para cruzar la maleza.",
     starterCode: "steps = 0\nmove_forward()\nprint(steps)",
     expectedPatterns: ["steps = 2", "move_forward()", "print(steps)"],
     successCondition: "uses_variable_to_move",
@@ -121,23 +141,28 @@ const playableLevels: Level[] = [
     }),
     maxAttempts: MAX_ATTEMPTS,
     failureNarrative:
-      "The grass rustles too loudly. The number was not useful enough to guide the body.",
+      "La maleza se mueve de más. El número no guió bien el cuerpo.",
     hints: {
-      first: "A variable can remember how many steps you intend to take.",
-      second: "Set steps to 2, then call move_forward twice.",
-      third: "Use:\nsteps = 2\nmove_forward()\nmove_forward()\nprint(steps)"
+      first: "Una variable puede recordar cuántos pasos planeas dar.",
+      second: "Pon steps en 2 y llama move_forward dos veces.",
+      third: "Usa:\nsteps = 2\nmove_forward()\nmove_forward()\nprint(steps)"
     },
     isPlayable: true
   },
   {
     id: 5,
-    title: "Tiny Hunter",
-    act: "ACT I - Birth",
+    title: "Primer Bocado",
+    act: "ACTO I - Nacimiento",
     narrative:
-      "A beetle crosses the wet soil. Hunger becomes arithmetic, then action.",
+      "Algo se mueve entre la tierra húmeda. El hambre se vuelve aritmética, luego ataque.",
     pythonConcept:
-      "Numbers can describe energy, venom, distance, and risk before the body commits.",
-    objective: "Define numeric energy and venom, then hunt and bite.",
+      "Los números describen energía, veneno, distancia y riesgo antes de actuar.",
+    studyNotes: [
+      "Los enteros son números sin comillas, por ejemplo: energy = 5.",
+      "Puedes preparar datos antes de ejecutar acciones.",
+      "Este nivel valida energy, venom, hunt() y bite() en ese flujo."
+    ],
+    objective: "Define energy y venom como números; luego caza y muerde.",
     starterCode: "energy = 0\nvenom = 0\nhunt()\n",
     expectedPatterns: ["energy = 5", "venom = 2", "hunt()", "bite()"],
     successCondition: "uses_numbers_to_hunt",
@@ -157,11 +182,11 @@ const playableLevels: Level[] = [
     }),
     maxAttempts: MAX_ATTEMPTS,
     failureNarrative:
-      "The strike misses. Hunger without numbers wastes more than it wins.",
+      "El ataque falla. Hambre sin números gasta más de lo que gana.",
     hints: {
-      first: "Use number assignments before the hunting commands.",
-      second: "Set energy to 5 and venom to 2, then call hunt() and bite().",
-      third: "Use:\nenergy = 5\nvenom = 2\nhunt()\nbite()"
+      first: "Usa asignaciones numéricas antes de los comandos de caza.",
+      second: "Pon energy en 5 y venom en 2; luego llama hunt() y bite().",
+      third: "Usa:\nenergy = 5\nvenom = 2\nhunt()\nbite()"
     },
     isPlayable: true
   }
@@ -179,294 +204,294 @@ type RoadmapSeed = {
 const roadmapSeeds: RoadmapSeed[] = [
   {
     id: 6,
-    title: "Fixed Signal",
-    act: "ACT I - Birth",
-    concept: "Constants",
-    objective: "Use an uppercase constant to store a safe signal.",
+    title: "Señal Fija",
+    act: "ACTO I - Nacimiento",
+    concept: "Constantes",
+    objective: "Usa una constante en mayúsculas para guardar una señal segura.",
     commands: ["print()", "move_forward()"]
   },
   {
     id: 7,
-    title: "Counting Steps",
-    act: "ACT I - Birth",
-    concept: "Arithmetic expressions",
-    objective: "Add and subtract numbers to choose a movement distance."
+    title: "Cuenta de Pasos",
+    act: "ACTO I - Nacimiento",
+    concept: "Expresiones aritméticas",
+    objective: "Suma y resta números para elegir una distancia de movimiento."
   },
   {
     id: 8,
-    title: "The River",
-    act: "ACT I - Birth",
-    concept: "Comparison operators",
-    objective: "Compare depth and energy before crossing."
+    title: "Cruce del Río",
+    act: "ACTO I - Nacimiento",
+    concept: "Operadores de comparación",
+    objective: "Compara profundidad y energía antes de cruzar."
   },
   {
     id: 9,
-    title: "Shadow Above",
-    act: "ACT I - Birth",
+    title: "Sombra en el Cielo",
+    act: "ACTO I - Nacimiento",
     concept: "if / else",
-    objective: "Choose hide or move from a predator signal.",
+    objective: "Elige esconderte o moverte según la señal del depredador.",
     commands: ["hide()", "sense_predator()"]
   },
   {
     id: 10,
-    title: "The Tall Grass",
-    act: "ACT I - Birth",
-    concept: "Boolean logic",
-    objective: "Combine true and false signals to enter cover."
+    title: "Cobertura Verde",
+    act: "ACTO I - Nacimiento",
+    concept: "Lógica booleana",
+    objective: "Combina señales true y false para entrar en cobertura."
   },
   {
     id: 11,
-    title: "Endless Hunger",
-    act: "ACT II - Survival",
-    concept: "while loops",
-    objective: "Repeat a hunt while hunger remains.",
+    title: "Hambre Persistente",
+    act: "ACTO II - Supervivencia",
+    concept: "Ciclos while",
+    objective: "Repite una caza mientras siga el hambre.",
     commands: ["hunt()", "bite()", "rest()"]
   },
   {
     id: 12,
-    title: "Hunting Pattern",
-    act: "ACT II - Survival",
-    concept: "for loops and range()",
-    objective: "Use range() to repeat a path a known number of times."
+    title: "Ruta de Caza",
+    act: "ACTO II - Supervivencia",
+    concept: "Ciclos for y range()",
+    objective: "Usa range() para repetir una ruta un número conocido de veces."
   },
   {
     id: 13,
-    title: "Repeated Escape",
-    act: "ACT II - Survival",
+    title: "Escape en Bucle",
+    act: "ACTO II - Supervivencia",
     concept: "break / continue",
-    objective: "Stop or skip a loop when the route becomes dangerous.",
+    objective: "Detén o salta una vuelta del ciclo cuando la ruta se vuelva peligrosa.",
     commands: ["move_forward()", "turn_left()", "hide()"]
   },
   {
     id: 14,
-    title: "The Burrow",
-    act: "ACT II - Survival",
-    concept: "Functions",
-    objective: "Wrap a safe behavior inside a named function."
+    title: "Refugio Bajo Tierra",
+    act: "ACTO II - Supervivencia",
+    concept: "Funciones",
+    objective: "Encapsula una conducta segura dentro de una función con nombre."
   },
   {
     id: 15,
-    title: "Strike",
-    act: "ACT II - Survival",
-    concept: "Parameters",
-    objective: "Send distance and force into a strike function.",
+    title: "La Mordida",
+    act: "ACTO II - Supervivencia",
+    concept: "Parámetros",
+    objective: "Envía distancia y fuerza a una función de ataque.",
     commands: ["bite()"]
   },
   {
     id: 16,
-    title: "Venom Efficiency",
-    act: "ACT II - Survival",
-    concept: "return values",
-    objective: "Return the best venom cost for a target."
+    title: "Veneno Exacto",
+    act: "ACTO II - Supervivencia",
+    concept: "Valores return",
+    objective: "Devuelve el mejor costo de veneno para un objetivo."
   },
   {
     id: 17,
-    title: "Hidden Scope",
-    act: "ACT II - Survival",
-    concept: "Variable scope",
-    objective: "Keep local decisions inside the function that owns them."
+    title: "Territorio Local",
+    act: "ACTO II - Supervivencia",
+    concept: "Scope de variables",
+    objective: "Mantén decisiones locales dentro de la función que las controla."
   },
   {
     id: 18,
-    title: "Scent Marks",
-    act: "ACT II - Survival",
-    concept: "String methods",
-    objective: "Clean and compare text signals before acting."
+    title: "Rastro de Olor",
+    act: "ACTO II - Supervivencia",
+    concept: "Métodos de string",
+    objective: "Limpia y compara señales de texto antes de actuar."
   },
   {
     id: 19,
-    title: "Food Trail",
-    act: "ACT II - Survival",
-    concept: "Lists",
-    objective: "Store several discovered food positions in order."
+    title: "Rastro de Comida",
+    act: "ACTO II - Supervivencia",
+    concept: "Listas",
+    objective: "Guarda varias posiciones de comida en orden."
   },
   {
     id: 20,
-    title: "Shed",
-    act: "ACT II - Survival",
-    concept: "List methods",
-    objective: "Append, remove, and sort survival clues before the first shed.",
+    title: "Primera Muda",
+    act: "ACTO II - Supervivencia",
+    concept: "Métodos de lista",
+    objective: "Agrega, elimina y ordena pistas antes de mudar piel.",
     commands: ["shed_skin()"]
   },
   {
     id: 21,
-    title: "Fixed Tracks",
-    act: "ACT III - Evolution",
-    concept: "Tuples",
-    objective: "Represent positions that should not change."
+    title: "Huellas Fijas",
+    act: "ACTO III - Evolución",
+    concept: "Tuplas",
+    objective: "Representa posiciones que no deberían cambiar."
   },
   {
     id: 22,
-    title: "Hunter Camps",
-    act: "ACT III - Evolution",
-    concept: "Dictionaries",
-    objective: "Map danger zones to behavior."
+    title: "Campamentos de Cazadores",
+    act: "ACTO III - Evolución",
+    concept: "Diccionarios",
+    objective: "Relaciona zonas de peligro con comportamientos."
   },
   {
     id: 23,
-    title: "Toxic Marsh",
-    act: "ACT III - Evolution",
+    title: "Pantano Tóxico",
+    act: "ACTO III - Evolución",
     concept: "Sets",
-    objective: "Keep unique safe tiles while ignoring duplicates."
+    objective: "Conserva casillas seguras únicas e ignora duplicados."
   },
   {
     id: 24,
-    title: "Memory Trails",
-    act: "ACT III - Evolution",
-    concept: "Iteration patterns",
-    objective: "Loop through remembered positions and choose the safest one."
+    title: "Mapa de Memoria",
+    act: "ACTO III - Evolución",
+    concept: "Patrones de iteración",
+    objective: "Recorre posiciones recordadas y elige la más segura."
   },
   {
     id: 25,
-    title: "Clean Route",
-    act: "ACT III - Evolution",
+    title: "Paso Seguro",
+    act: "ACTO III - Evolución",
     concept: "List comprehensions",
-    objective: "Build a filtered path from many possible tiles."
+    objective: "Construye una ruta filtrada desde muchas casillas posibles."
   },
   {
     id: 26,
-    title: "River Input",
-    act: "ACT III - Evolution",
-    concept: "Input parsing",
-    objective: "Convert incoming text into numbers before deciding."
+    title: "Lectura del Río",
+    act: "ACTO III - Evolución",
+    concept: "Parseo de input",
+    objective: "Convierte texto recibido en números antes de decidir."
   },
   {
     id: 27,
-    title: "Storm",
-    act: "ACT III - Evolution",
+    title: "Tormenta",
+    act: "ACTO III - Evolución",
     concept: "try / except",
-    objective: "Recover when a sensed path fails."
+    objective: "Recupérate cuando una ruta detectada falla."
   },
   {
     id: 28,
-    title: "Borrowed Instinct",
-    act: "ACT III - Evolution",
-    concept: "Modules and imports",
-    objective: "Import a helper instinct instead of rewriting it."
+    title: "Herramienta Prestada",
+    act: "ACTO III - Evolución",
+    concept: "Módulos e imports",
+    objective: "Importa un instinto auxiliar en vez de reescribirlo."
   },
   {
     id: 29,
-    title: "Written Trail",
-    act: "ACT III - Evolution",
-    concept: "Files",
-    objective: "Read and write a trail memory for later."
+    title: "Memoria Escrita",
+    act: "ACTO III - Evolución",
+    concept: "Archivos",
+    objective: "Lee y escribe una memoria de ruta para después."
   },
   {
     id: 30,
-    title: "Alpha Snake",
-    act: "ACT III - Evolution",
+    title: "Ruta Rota",
+    act: "ACTO III - Evolución",
     concept: "Debugging",
-    objective: "Inspect the failing signal and repair the route."
+    objective: "Inspecciona la señal fallida y repara la ruta."
   },
   {
     id: 31,
-    title: "Nest",
-    act: "ACT IV - Legacy",
-    concept: "Classes",
-    objective: "Create a Snake class for the next generation.",
+    title: "El Nuevo Nido",
+    act: "ACTO IV - Legado",
+    concept: "Clases",
+    objective: "Crea una clase Snake para la siguiente generación.",
     commands: ["protect_child()"]
   },
   {
     id: 32,
-    title: "Eggs",
-    act: "ACT IV - Legacy",
-    concept: "Objects and instances",
-    objective: "Create several egg instances."
+    title: "Huevos",
+    act: "ACTO IV - Legado",
+    concept: "Objetos e instancias",
+    objective: "Crea varias instancias de huevo."
   },
   {
     id: 33,
-    title: "Protect The Young",
-    act: "ACT IV - Legacy",
-    concept: "Methods",
-    objective: "Give each child object an action it can perform.",
+    title: "Guardia del Nido",
+    act: "ACTO IV - Legado",
+    concept: "Métodos",
+    objective: "Dale a cada objeto cría una acción que pueda ejecutar.",
     commands: ["protect_child()", "hide()"]
   },
   {
     id: 34,
-    title: "Teaching Instinct",
-    act: "ACT IV - Legacy",
-    concept: "Inheritance",
-    objective: "Pass survival behavior into a subclass."
+    title: "Herencia Viva",
+    act: "ACTO IV - Legado",
+    concept: "Herencia",
+    objective: "Pasa comportamiento de supervivencia a una subclase."
   },
   {
     id: 35,
-    title: "Family Pattern",
-    act: "ACT IV - Legacy",
-    concept: "Composition",
-    objective: "Build a family system from smaller objects."
+    title: "Patrón Familiar",
+    act: "ACTO IV - Legado",
+    concept: "Composición",
+    objective: "Construye un sistema familiar con objetos pequeños."
   },
   {
     id: 36,
-    title: "Recursive Bloodline",
-    act: "ACT IV - Legacy",
-    concept: "Recursion",
-    objective: "Model lineage as a recursive chain."
+    title: "Linaje Infinito",
+    act: "ACTO IV - Legado",
+    concept: "Recursión",
+    objective: "Modela el linaje como una cadena recursiva."
   },
   {
     id: 37,
-    title: "Migration",
-    act: "ACT IV - Legacy",
-    concept: "Algorithms",
-    objective: "Move a family through a mapped route."
+    title: "Migración",
+    act: "ACTO IV - Legado",
+    concept: "Algoritmos",
+    objective: "Mueve una familia a través de una ruta mapeada."
   },
   {
     id: 38,
-    title: "Hunter Drones",
-    act: "ACT IV - Legacy",
+    title: "Máquinas de Rastreo",
+    act: "ACTO IV - Legado",
     concept: "Pathfinding",
-    objective: "Route around scanning machines.",
+    objective: "Rodea máquinas de escaneo con una ruta segura.",
     commands: ["sense_predator()", "hide()"]
   },
   {
     id: 39,
-    title: "The Last Shed",
-    act: "ACT IV - Legacy",
-    concept: "Optimization",
-    objective: "Make an old instinct leaner.",
+    title: "La Última Muda",
+    act: "ACTO IV - Legado",
+    concept: "Optimización",
+    objective: "Haz más ligero un instinto viejo.",
     commands: ["shed_skin()"]
   },
   {
     id: 40,
-    title: "Aging",
-    act: "ACT IV - Legacy",
-    concept: "State machines",
-    objective: "Update body state over time."
+    title: "Cuerpo Viejo",
+    act: "ACTO IV - Legado",
+    concept: "Máquinas de estado",
+    objective: "Actualiza el estado del cuerpo con el tiempo."
   },
   {
     id: 41,
-    title: "Saved Memory",
-    act: "ACT V - Death",
-    concept: "Data persistence",
-    objective: "Save the final route so the bloodline remembers it."
+    title: "Memoria del Linaje",
+    act: "ACTO V - Muerte",
+    concept: "Persistencia de datos",
+    objective: "Guarda la ruta final para que el linaje la recuerde."
   },
   {
     id: 42,
-    title: "Fading Vision",
-    act: "ACT V - Death",
-    concept: "Testing and assertions",
-    objective: "Prove the old instinct still works before moving."
+    title: "Vista Cansada",
+    act: "ACTO V - Muerte",
+    concept: "Testing y assertions",
+    objective: "Demuestra que el instinto viejo aún funciona antes de moverte."
   },
   {
     id: 43,
-    title: "Final Nest",
-    act: "ACT V - Death",
+    title: "Último Refugio",
+    act: "ACTO V - Muerte",
     concept: "Refactoring",
-    objective: "Simplify inherited behavior before passing it on.",
+    objective: "Simplifica comportamiento heredado antes de pasarlo.",
     commands: ["protect_child()"]
   },
   {
     id: 44,
-    title: "The Last Hunt",
-    act: "ACT V - Death",
-    concept: "Integrated challenge",
-    objective: "Use every learned instinct in one final route."
+    title: "La Última Caza",
+    act: "ACTO V - Muerte",
+    concept: "Reto integrado",
+    objective: "Usa cada instinto aprendido en una ruta final."
   },
   {
     id: 45,
-    title: "Instinct()",
-    act: "ACT V - Death",
-    concept: "Capstone project",
-    objective: "End the life cycle by shipping a complete survival program."
+    title: "Legado Final",
+    act: "ACTO V - Muerte",
+    concept: "Proyecto final",
+    objective: "Cierra el ciclo de vida entregando un programa completo de supervivencia."
   }
 ];
 
@@ -475,8 +500,13 @@ const roadmapLevels: Level[] = roadmapSeeds.map((seed) => ({
   title: seed.title,
   act: seed.act,
   narrative:
-    "This memory waits in the roadmap. It is designed, but its full encounter is reserved for the next prototype pass.",
+    "Esta memoria espera en la ruta. Ya está planeada, pero su encuentro completo llegará en una siguiente versión.",
   pythonConcept: seed.concept,
+  studyNotes: [
+    `Tema principal: ${seed.concept}.`,
+    "Lee el objetivo y ubica qué herramienta de Python necesitas practicar.",
+    "Este nodo existe para que veas la ruta completa de aprendizaje."
+  ],
   objective: seed.objective,
   starterCode: `# Roadmap node: ${seed.title}\n# Full logic arrives in the next build.`,
   expectedPatterns: [seed.concept],
@@ -509,11 +539,11 @@ const roadmapLevels: Level[] = roadmapSeeds.map((seed) => ({
   ),
   maxAttempts: MAX_ATTEMPTS,
   failureNarrative:
-    "The future lesson rejects the pattern for now. Return when this encounter is active.",
+    "La lección futura todavía no acepta este patrón. Vuelve cuando el encuentro esté activo.",
   hints: {
-    first: "This node is present so the full learning path can be seen.",
-    second: "The current prototype makes levels 1 through 5 fully playable.",
-    third: "Advance through the playable arc, then use this as roadmap context."
+    first: "Este nodo está presente para mostrar la ruta completa de aprendizaje.",
+    second: "Este prototipo hace jugables los niveles 1 al 5.",
+    third: "Avanza por el arco jugable y usa esto como contexto de la ruta."
   },
   isPlayable: false
 }));
